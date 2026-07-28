@@ -12,9 +12,9 @@ export class InMemoryProjectRepository implements IProjectRepository {
   }
   private readonly projects = new Map<string, Project>();
 
-  findAll(teamId: string): Promise<Project[]> {
+  findAll(workspaceId: string): Promise<Project[]> {
     const projects = Array.from(this.projects.values()).filter(
-      (project) => project.teamId === teamId,
+      (project) => project.workspaceId === workspaceId,
     );
 
     return Promise.resolve(projects);
@@ -50,7 +50,7 @@ export class InMemoryProjectRepository implements IProjectRepository {
           ? project.description
           : existing.description,
       icon: project.icon !== undefined ? project.icon : existing.icon,
-      teamId: existing.teamId,
+      workspaceId: existing.workspaceId,
       createdAt: existing.createdAt,
       updatedAt: new Date(),
     });

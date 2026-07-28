@@ -10,8 +10,6 @@ export type ProjectWithStats = ProjectResponseDto & {
 export interface IProjectRepository {
   findAll(teamId: string, userId: string): Promise<Project[]>;
 
-  findById(projectId: string, userId: string): Promise<Project>;
-
   create(project: Project): Promise<Project>;
 
   update(
@@ -21,6 +19,4 @@ export interface IProjectRepository {
   ): Promise<Project | null>;
 
   delete(projectId: string, userId: string): Promise<void>;
-
-  getProjectsStats(teamId: string): Promise<ProjectWithStats[]>;
 }

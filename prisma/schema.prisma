@@ -16,31 +16,52 @@ model User {
   provider   AuthProvider @default(Local)
   providerId String     
 
-  todos Todo[]
-  teams Team[]
+  todos            Todo[]
+
+  workspaceMembers WorkspaceMember[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([provider, providerId])
-
   @@map("users")
 }
 
-model Team {
+model Workspace {
   id String @id
 
-  name String
+  name        String 
+  description String?
 
-  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId String @map("owner_id")
+  customUrl String? @unique
+  imageUrl  String?
 
+  members  WorkspaceMember[]
   projects Project[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("teams")
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id String @id @default(uuid())
+
+  role WorkspaceRole @default(Member)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String    @map("workspace_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, workspaceId])
+  @@index([workspaceId])
+  @@map("workspace_members")
 }
 
 model Project {
@@ -48,12 +69,12 @@ model Project {
 
   name        String
   description String?
-  icon    String
+  icon        String
 
   todos Todo[]
 
-  team      Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  teamId    String @map("team_id")
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String    @map("workspace_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -79,20 +100,23 @@ model Todo {
 
   @@index([projectId])
   @@index([assigneeId])
-
   @@map("todos")
 }
-
 
 enum UserRole {
   Admin
   User
 }
 
+enum WorkspaceRole {
+  Admin
+  Manager
+  Member
+}
+
 enum TodoStatus {
   Pending
   InProgress
-
   Completed
 }
 

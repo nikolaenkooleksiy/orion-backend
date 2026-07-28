@@ -6,7 +6,7 @@ export class CreateProjectDto {
   name: string;
 
   @IsString()
-  teamId: string;
+  workspaceId: string;
 
   @IsString()
   @IsOptional()

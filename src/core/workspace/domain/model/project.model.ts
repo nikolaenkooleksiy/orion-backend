@@ -5,7 +5,7 @@ export interface ProjectProps {
   name: string;
   description: string | null;
   icon: string;
-  teamId: string;
+  workspaceId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,7 +14,7 @@ export interface CreateProjectProps {
   name: string;
   description?: string | null;
   icon: string;
-  teamId: string;
+  workspaceId: string;
 }
 
 export class Project {
@@ -28,7 +28,7 @@ export class Project {
       name: props.name,
       description: props.description ?? null,
       icon: props.icon,
-      teamId: props.teamId,
+      workspaceId: props.workspaceId,
       createdAt: now,
       updatedAt: now,
     });
@@ -54,8 +54,8 @@ export class Project {
     return this.props.icon;
   }
 
-  get teamId(): string {
-    return this.props.teamId;
+  get workspaceId(): string {
+    return this.props.workspaceId;
   }
 
   get createdAt(): Date {

@@ -25,11 +25,6 @@ export class ProjectController {
     return this.projectService.findAll(teamId, payload.sub);
   }
 
-  @Get(':id/info')
-  async findById(@Param('id') id: string, @CurrentUser() payload: JwtPayload) {
-    return this.projectService.findById(id, payload.sub);
-  }
-
   @Post()
   async create(@Body() body: CreateProjectDto) {
     return this.projectService.create(body);
@@ -50,10 +45,5 @@ export class ProjectController {
     @CurrentUser() payload: JwtPayload,
   ) {
     return this.projectService.delete(projectId, payload.sub);
-  }
-
-  @Get(':teamId/stats')
-  async getProjectsStats(@Param('teamId') teamId: string) {
-    return this.projectService.getProjectsStats(teamId);
   }
 }

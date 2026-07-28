@@ -1,4 +1,5 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
@@ -29,6 +30,28 @@ export class StorageService {
     this.bucketName = this.configService.getOrThrow<string>(
       'STORAGE_BUCKET_NAME',
     );
+  }
+
+  async moveFile(oldKey: string, newKey: string): Promise<void> {
+    try {
+      const copySource = encodeURIComponent(`${this.bucketName}/${oldKey}`);
+
+      await this.s3Client.send(
+        new CopyObjectCommand({
+          Bucket: this.bucketName,
+          CopySource: copySource,
+          Key: newKey,
+        }),
+      );
+
+      await this.deleteFile(oldKey);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      throw new InternalServerErrorException(
+        `Не вдалося перемістити файл: ${message}`,
+      );
+    }
   }
 
   async getUploadUrl(

@@ -23,7 +23,7 @@ export class ProjectMapper {
       name: project.name,
       description: project.description,
       icon: project.icon,
-      teamId: project.teamId,
+      workspaceId: project.workspaceId,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,
     };

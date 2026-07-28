@@ -29,22 +29,6 @@ export class ProjectService {
     return projects.map((project) => ProjectMapper.toResponse(project));
   }
 
-  async findById(projectId: string, userId: string) {
-    try {
-      const project = await this.projectRepository.findById(projectId, userId);
-
-      return ProjectMapper.toResponse(project);
-    } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new NotFoundException('Project not found');
-      }
-      throw error;
-    }
-  }
-
   async create(dto: CreateProjectDto) {
     try {
       const project = Project.create({ ...dto });
@@ -101,11 +85,5 @@ export class ProjectService {
       }
       throw error;
     }
-  }
-
-  async getProjectsStats(teamId: string) {
-    const stats = await this.projectRepository.getProjectsStats(teamId);
-
-    return stats;
   }
 }

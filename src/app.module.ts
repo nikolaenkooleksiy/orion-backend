@@ -4,8 +4,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AuthModule } from './core/auth/auth.module';
-import { TeamModule } from './core/team/team.module';
 import { UserModule } from './core/user/user.module';
+import { WorkspaceModule } from './core/workspace/workspace.module';
 import { PrismaModule } from './infrastructure/database/prisma.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
 
@@ -17,7 +17,7 @@ import { StorageModule } from './infrastructure/storage/storage.module';
     PrismaModule,
     UserModule,
     AuthModule,
-    TeamModule,
+    WorkspaceModule,
     StorageModule,
   ],
   providers: [
