@@ -12,6 +12,9 @@ export class WorkspaceMapper {
     return {
       id: workspace.id,
       name: workspace.name,
+      imageUrl: workspace.imageUrl,
+      description: workspace.description,
+      customUrl: workspace.customUrl,
     };
   }
 

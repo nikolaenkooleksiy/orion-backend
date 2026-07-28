@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 interface CreateWorkspaceProps {
   name: string;
   description?: string | null;
-  imageUrl?: string | null;
+  imageUrl: string;
   customUrl?: string | null;
 }
 
@@ -27,7 +27,7 @@ export class Workspace {
       id: id ?? randomUUID(),
       name: props.name,
       description: props.description ?? null,
-      imageUrl: props.imageUrl ?? null,
+      imageUrl: props.imageUrl,
       customUrl: props.customUrl ?? null,
       createdAt: now,
       updatedAt: now,

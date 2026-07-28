@@ -22,6 +22,27 @@ services:
       - minio_data:/data
     command: server /data --console-address ":9001"
 
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set myminio http://minio:9000 ${MINIO_USER} ${MINIO_PASSWORD}; do
+        echo 'Ожидание запуска MinIO...';
+        sleep 2;
+      done;
+
+      mc mb --ignore-existing myminio/${STORAGE_BUCKET_NAME};
+
+      mc ilm rm --all --force myminio/${STORAGE_BUCKET_NAME};
+
+      mc ilm rule add --expire-days 1 --prefix 'temp/' myminio/${STORAGE_BUCKET_NAME};
+
+      echo 'Настройка MinIO завершена успешно!';
+      exit 0;
+      "
+
 volumes:
   postgres_data:
   minio_data:

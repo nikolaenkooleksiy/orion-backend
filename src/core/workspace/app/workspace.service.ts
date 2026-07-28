@@ -33,7 +33,7 @@ export class WorkspaceService {
 
   async create(dto: CreateWorkspaceDto, ownerId: string) {
     try {
-      const workspace = Workspace.create({ ...dto });
+      const workspace = Workspace.create({ ...dto, imageUrl: dto.imageKey });
       const createdWorkspace = await this.workspaceRepository.create(
         workspace,
         ownerId,
