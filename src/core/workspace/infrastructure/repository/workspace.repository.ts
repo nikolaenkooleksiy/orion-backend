@@ -37,10 +37,20 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return WorkspaceMapper.toDomain(team);
   }
 
-  async create(workspace: Workspace): Promise<Workspace> {
+  async create(workspace: Workspace, memberId: string): Promise<Workspace> {
     const data = WorkspaceMapper.toPersistence(workspace);
 
-    const created = await this.db.workspace.create({ data });
+    const created = await this.db.workspace.create({
+      data: {
+        ...data,
+        members: {
+          create: {
+            userId: memberId,
+            role: 'Admin',
+          },
+        },
+      },
+    });
 
     return WorkspaceMapper.toDomain(created);
   }

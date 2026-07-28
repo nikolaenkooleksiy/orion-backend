@@ -31,10 +31,13 @@ export class WorkspaceService {
     );
   }
 
-  async create(dto: CreateWorkspaceDto) {
+  async create(dto: CreateWorkspaceDto, ownerId: string) {
     try {
-      const team = Workspace.create({ ...dto });
-      const createdWorkspace = await this.workspaceRepository.create(team);
+      const workspace = Workspace.create({ ...dto });
+      const createdWorkspace = await this.workspaceRepository.create(
+        workspace,
+        ownerId,
+      );
 
       const fileType = path.extname(dto.imageKey).substring(1);
 

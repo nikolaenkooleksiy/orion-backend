@@ -15,8 +15,11 @@ export class WorkspaceController {
   }
 
   @Post()
-  async create(@Body() body: CreateWorkspaceDto) {
-    return this.workspaceService.create(body);
+  async create(
+    @Body() body: CreateWorkspaceDto,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    return this.workspaceService.create(body, payload.sub);
   }
 
   @Post('image/url')
