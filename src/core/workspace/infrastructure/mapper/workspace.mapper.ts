@@ -8,11 +8,14 @@ export class WorkspaceMapper {
     return Workspace.restore({ ...dto });
   }
 
-  static toResponse(workspace: Workspace): WorkspaceResponseDto {
+  static toResponse(
+    workspace: Workspace,
+    imageUrl?: string | null,
+  ): WorkspaceResponseDto {
     return {
       id: workspace.id,
       name: workspace.name,
-      imageUrl: workspace.imageUrl,
+      imageUrl: imageUrl ?? workspace.imageUrl,
       description: workspace.description,
       customUrl: workspace.customUrl,
     };

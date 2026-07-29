@@ -19,15 +19,25 @@ export class WorkspaceService {
     private readonly storageService: StorageService,
   ) {}
 
+  private async resolveImageUrl(s3Key: string | null): Promise<string | null> {
+    if (!s3Key) return null;
+    return this.storageService.getDownloadUrl(s3Key);
+  }
+
   async getWorkspaceByName(name: string, ownerId: string) {
-    return WorkspaceMapper.toResponse(
-      await this.workspaceRepository.findByName(name, ownerId),
-    );
+    const workspace = await this.workspaceRepository.findByName(name, ownerId);
+    const imageUrl = await this.resolveImageUrl(workspace.imageUrl);
+    return WorkspaceMapper.toResponse(workspace, imageUrl);
   }
 
   async getAllWorkspaces(ownerId: string) {
-    return (await this.workspaceRepository.findAllUserWorkspaces(ownerId)).map(
-      (t) => WorkspaceMapper.toResponse(t),
+    const workspaces =
+      await this.workspaceRepository.findAllUserWorkspaces(ownerId);
+    return Promise.all(
+      workspaces.map(async (w) => {
+        const imageUrl = await this.resolveImageUrl(w.imageUrl);
+        return WorkspaceMapper.toResponse(w, imageUrl);
+      }),
     );
   }
 
@@ -45,9 +55,7 @@ export class WorkspaceService {
 
       await this.storageService.moveFile(dto.imageKey, newKey);
 
-      const imageUrl = await this.storageService.getDownloadUrl(newKey);
-
-      createdWorkspace.updateImageUrl(imageUrl);
+      createdWorkspace.updateImageUrl(newKey);
 
       await this.workspaceRepository.update(createdWorkspace);
     } catch (error) {
