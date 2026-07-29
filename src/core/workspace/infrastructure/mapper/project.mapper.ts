@@ -8,12 +8,26 @@ export class ProjectMapper {
       id: project.id,
       name: project.name,
       description: project.description,
+      color: project.color,
+      isFavorite: project.isFavorite,
       createdAt: project.createdAt,
     };
   }
 
-  static toDomain(project: PrismaProject): Project {
-    return Project.restore({ ...project });
+  static toDomain(
+    project: PrismaProject,
+    isFavorite: boolean = false,
+  ): Project {
+    return Project.restore({
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      workspaceId: project.workspaceId,
+      color: project.color,
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt,
+      isFavorite,
+    });
   }
 
   static toPersistence(project: Project) {
@@ -21,6 +35,7 @@ export class ProjectMapper {
       id: project.id,
       name: project.name,
       description: project.description,
+      color: project.color,
       workspaceId: project.workspaceId,
       createdAt: project.createdAt,
       updatedAt: project.updatedAt,

@@ -39,7 +39,7 @@ export class ProjectService {
 
   async create(dto: CreateProjectDto) {
     try {
-      const project = Project.create({ ...dto });
+      const project = Project.create({ ...dto, color: 'bg-blue-500' });
 
       const created = await this.projectRepository.create(project);
 
@@ -64,13 +64,9 @@ export class ProjectService {
     }
   }
 
-  async update(projectId: string, project: UpdateProjectDto, userId: string) {
+  async update(projectId: string, project: UpdateProjectDto) {
     try {
-      const updated = await this.projectRepository.update(
-        projectId,
-        userId,
-        project,
-      );
+      const updated = await this.projectRepository.update(projectId, project);
 
       if (!updated) {
         throw new NotFoundException('Project not found');
@@ -93,6 +89,20 @@ export class ProjectService {
   async delete(projectId: string, userId: string) {
     try {
       await this.projectRepository.delete(projectId, userId);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Project not found');
+      }
+      throw error;
+    }
+  }
+
+  async addToFavorites(projectId: string, userId: string) {
+    try {
+      return await this.projectRepository.addToFavorites(projectId, userId);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&

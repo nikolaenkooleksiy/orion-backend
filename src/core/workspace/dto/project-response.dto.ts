@@ -3,4 +3,6 @@ export class ProjectResponseDto {
   name: string;
   description: string | null;
   createdAt: Date;
+  isFavorite: boolean;
+  color: string;
 }

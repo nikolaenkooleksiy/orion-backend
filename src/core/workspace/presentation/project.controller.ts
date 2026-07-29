@@ -31,12 +31,8 @@ export class ProjectController {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') projectId: string,
-    @Body() body: UpdateProjectDto,
-    @CurrentUser() payload: JwtPayload,
-  ) {
-    return this.projectService.update(projectId, body, payload.sub);
+  async update(@Param('id') projectId: string, @Body() body: UpdateProjectDto) {
+    return this.projectService.update(projectId, body);
   }
 
   @Delete(':id')
@@ -45,5 +41,13 @@ export class ProjectController {
     @CurrentUser() payload: JwtPayload,
   ) {
     return this.projectService.delete(projectId, payload.sub);
+  }
+
+  @Post(':projectId/toggle-favorite')
+  async addToFavorites(
+    @Param('projectId') projectId: string,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    return this.projectService.addToFavorites(projectId, payload.sub);
   }
 }

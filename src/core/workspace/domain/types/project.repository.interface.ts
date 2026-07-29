@@ -12,11 +12,9 @@ export interface IProjectRepository {
 
   create(project: Project): Promise<Project>;
 
-  update(
-    projectId: string,
-    userId: string,
-    project: Partial<Project>,
-  ): Promise<Project | null>;
+  update(projectId: string, project: Partial<Project>): Promise<Project | null>;
 
   delete(projectId: string, userId: string): Promise<void>;
+
+  addToFavorites(projectId: string, userId: string): Promise<void>;
 }

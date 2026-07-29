@@ -7,6 +7,9 @@ import {
 
 @Injectable()
 export class InMemoryProjectRepository implements IProjectRepository {
+  addToFavorites(projectId: string, userId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   getProjectsStats(teamId: string): Promise<ProjectWithStats[]> {
     throw new Error('Method not implemented.');
   }
@@ -34,7 +37,6 @@ export class InMemoryProjectRepository implements IProjectRepository {
 
   update(
     projectId: string,
-    userId: string,
     project: Partial<Project>,
   ): Promise<Project | null> {
     const existing = this.projects.get(projectId);
@@ -49,6 +51,7 @@ export class InMemoryProjectRepository implements IProjectRepository {
         project.description !== undefined
           ? project.description
           : existing.description,
+      color: project.color ?? existing.color,
       workspaceId: existing.workspaceId,
       createdAt: existing.createdAt,
       updatedAt: new Date(),

@@ -7,7 +7,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id
+  id        String   @id @default(uuid())
   username  String   @unique
   avatarUrl String?
   email     String   @unique
@@ -17,6 +17,7 @@ model User {
   providerId String     
 
   workspaceMembers WorkspaceMember[]
+  favoriteProjects UserFavoriteProject[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -26,7 +27,7 @@ model User {
 }
 
 model Workspace {
-  id String @id
+  id String @id @default(uuid())
 
   name        String 
   description String?
@@ -63,12 +64,15 @@ model WorkspaceMember {
 }
 
 model Project {
-  id String @id
+  id String @id @default(uuid())
 
   name        String
   description String?
+  color       String
 
   boards Board[]
+
+  favoriteUsers UserFavoriteProject[]
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String    @map("workspace_id")
@@ -79,11 +83,27 @@ model Project {
   @@map("projects")
 }
 
+model UserFavoriteProject {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String  @map("project_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, projectId])
+  @@index([userId])
+  @@map("user_favorite_projects")
+}
 
 model Board {
-  id String @id
+  id String @id @default(uuid())
 
-  name        String
+  name String
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String  @map("project_id")
@@ -105,7 +125,6 @@ enum WorkspaceRole {
   Manager
   Member
 }
-
 
 enum AuthProvider {
   Local
