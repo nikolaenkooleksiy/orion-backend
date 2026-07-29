@@ -4,7 +4,6 @@ export interface ProjectProps {
   id: string;
   name: string;
   description: string | null;
-  icon: string;
   workspaceId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -13,7 +12,6 @@ export interface ProjectProps {
 export interface CreateProjectProps {
   name: string;
   description?: string | null;
-  icon: string;
   workspaceId: string;
 }
 
@@ -27,7 +25,6 @@ export class Project {
       id: randomUUID(),
       name: props.name,
       description: props.description ?? null,
-      icon: props.icon,
       workspaceId: props.workspaceId,
       createdAt: now,
       updatedAt: now,
@@ -48,10 +45,6 @@ export class Project {
 
   get description(): string | null {
     return this.props.description;
-  }
-
-  get icon(): string {
-    return this.props.icon;
   }
 
   get workspaceId(): string {
@@ -77,11 +70,6 @@ export class Project {
 
   changeDescription(description: string | null): void {
     this.props.description = description;
-    this.props.updatedAt = new Date();
-  }
-
-  changeIcon(icon: string): void {
-    this.props.icon = icon;
     this.props.updatedAt = new Date();
   }
 }

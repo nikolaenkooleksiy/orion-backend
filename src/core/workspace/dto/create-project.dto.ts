@@ -6,12 +6,13 @@ export class CreateProjectDto {
   name: string;
 
   @IsString()
-  workspaceId: string;
-
-  @IsString()
   @IsOptional()
   description?: string | null;
 
   @IsString()
-  icon: string;
+  @IsOptional()
+  boardName?: string | null;
+
+  @IsString()
+  workspaceId: string;
 }

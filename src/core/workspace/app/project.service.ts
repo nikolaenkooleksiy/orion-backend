@@ -6,7 +6,12 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
+import { BoardModel } from '../domain/model/board.model';
 import { Project } from '../domain/model/project.model';
+import {
+  BOARD_REPOSITORY,
+  type IBoardRepository,
+} from '../domain/types/board.repository.interface';
 import {
   type IProjectRepository,
   PROJECT_REPOSITORY,
@@ -20,6 +25,9 @@ export class ProjectService {
   constructor(
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: IProjectRepository,
+    @Inject(BOARD_REPOSITORY)
+    private readonly boardRepository: IBoardRepository,
+
     private readonly storageService: StorageService,
   ) {}
 
@@ -34,6 +42,15 @@ export class ProjectService {
       const project = Project.create({ ...dto });
 
       const created = await this.projectRepository.create(project);
+
+      const defaultBoardName = dto.boardName ?? 'Default Board';
+
+      await this.boardRepository.create(
+        BoardModel.create({
+          name: defaultBoardName,
+          projectId: created.id,
+        }),
+      );
 
       return ProjectMapper.toResponse(created);
     } catch (error) {

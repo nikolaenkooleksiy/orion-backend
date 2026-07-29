@@ -49,7 +49,6 @@ export class InMemoryProjectRepository implements IProjectRepository {
         project.description !== undefined
           ? project.description
           : existing.description,
-      icon: project.icon !== undefined ? project.icon : existing.icon,
       workspaceId: existing.workspaceId,
       createdAt: existing.createdAt,
       updatedAt: new Date(),
