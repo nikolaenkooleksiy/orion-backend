@@ -25,6 +25,14 @@ export class WorkspaceController {
     return this.workspaceService.getAllWorkspaces(payload.sub, name);
   }
 
+  @Get(':workspaceId')
+  async findById(
+    @Param('workspaceId') workspaceId: string,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    return this.workspaceService.getWorkspaceById(workspaceId, payload.sub);
+  }
+
   @Post()
   async create(
     @Body() body: CreateWorkspaceDto,

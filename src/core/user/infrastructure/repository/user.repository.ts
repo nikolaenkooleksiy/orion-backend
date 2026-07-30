@@ -40,6 +40,10 @@ export class UserRepository implements IUserRepository {
 
   async upsert(user: User): Promise<User> {
     const data = UserMapper.toPersistence(user);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, createdAt, ...updateData } = data;
+
     const userData = await this.db.user.upsert({
       where: {
         provider_providerId: {
@@ -48,7 +52,7 @@ export class UserRepository implements IUserRepository {
         },
       },
       create: data,
-      update: data,
+      update: updateData,
     });
 
     return UserMapper.toModel(userData);

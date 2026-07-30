@@ -44,6 +44,21 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     return WorkspaceMapper.toDomain(team);
   }
 
+  async findById(workspaceId: string, memberId: string): Promise<Workspace> {
+    const team = await this.db.workspace.findFirstOrThrow({
+      where: {
+        id: workspaceId,
+        members: {
+          some: {
+            userId: memberId,
+          },
+        },
+      },
+    });
+
+    return WorkspaceMapper.toDomain(team);
+  }
+
   async create(workspace: Workspace, memberId: string): Promise<Workspace> {
     const data = WorkspaceMapper.toPersistence(workspace);
 

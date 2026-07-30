@@ -7,6 +7,8 @@ export interface IWorkspaceRepository {
 
   findByName(name: string, ownerId: string): Promise<Workspace>;
 
+  findById(workspaceId: string, ownerId: string): Promise<Workspace>;
+
   create(workspace: Workspace, memberId: string): Promise<Workspace>;
   update(workspace: Partial<Workspace>): Promise<Workspace>;
 
