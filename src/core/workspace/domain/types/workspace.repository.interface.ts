@@ -3,7 +3,7 @@ import { Workspace } from '../model/workspace.model';
 export const WORKSPACE_REPOSITORY = Symbol('WORKSPACE_REPOSITORY');
 
 export interface IWorkspaceRepository {
-  findAllUserWorkspaces(userId: string): Promise<Workspace[]>;
+  findAllUserWorkspaces(userId: string, name?: string): Promise<Workspace[]>;
 
   findByName(name: string, ownerId: string): Promise<Workspace>;
 

@@ -8,13 +8,20 @@ import { WorkspaceMapper } from '../mapper/workspace.mapper';
 export class WorkspaceRepository implements IWorkspaceRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async findAllUserWorkspaces(userId: string): Promise<Workspace[]> {
+  async findAllUserWorkspaces(
+    userId: string,
+    name?: string,
+  ): Promise<Workspace[]> {
     const workspaces = await this.db.workspace.findMany({
       where: {
         members: {
           some: {
             userId,
           },
+        },
+        name: {
+          contains: name,
+          mode: 'insensitive',
         },
       },
     });

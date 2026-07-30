@@ -30,9 +30,11 @@ export class WorkspaceService {
     return WorkspaceMapper.toResponse(workspace, imageUrl);
   }
 
-  async getAllWorkspaces(ownerId: string) {
-    const workspaces =
-      await this.workspaceRepository.findAllUserWorkspaces(ownerId);
+  async getAllWorkspaces(ownerId: string, name?: string) {
+    const workspaces = await this.workspaceRepository.findAllUserWorkspaces(
+      ownerId,
+      name,
+    );
     return Promise.all(
       workspaces.map(async (w) => {
         const imageUrl = await this.resolveImageUrl(w.imageUrl);

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators';
 import { type JwtPayload } from 'src/common/types';
 import { WorkspaceService } from '../app/workspace.service';
@@ -10,8 +18,11 @@ export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get()
-  async findAll(@CurrentUser() payload: JwtPayload) {
-    return this.workspaceService.getAllWorkspaces(payload.sub);
+  async findAll(
+    @CurrentUser() payload: JwtPayload,
+    @Query('name') name?: string,
+  ) {
+    return this.workspaceService.getAllWorkspaces(payload.sub, name);
   }
 
   @Post()
