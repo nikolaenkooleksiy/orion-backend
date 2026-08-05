@@ -10,6 +10,7 @@ import {
 import { CurrentUser } from 'src/common/decorators';
 import { type JwtPayload } from 'src/common/types';
 import { ProjectService } from '../app/project.service';
+import { CreateBoardDto } from '../dto/create-board.dto';
 import { CreateProjectDto } from '../dto/create-project.dto';
 import { UpdateProjectDto } from '../dto/update-project.dto';
 
@@ -54,5 +55,13 @@ export class ProjectController {
   @Get(':projectId/boards')
   async getProjectBoards(@Param('projectId') projectId: string) {
     return this.projectService.getProjectBoards(projectId);
+  }
+
+  @Post(':projectId/boards')
+  async createBoard(
+    @Param('projectId') projectId: string,
+    @Body() body: CreateBoardDto,
+  ) {
+    return this.projectService.createBoard(projectId, body);
   }
 }
