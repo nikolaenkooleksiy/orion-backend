@@ -19,8 +19,13 @@ export class BoardRepository implements IBoardRepository {
   async create(board: BoardModel): Promise<BoardModel> {
     const data = BoardMapper.toPersistence(board);
 
+    console.log('Creating board with data:', board);
+
     const newBoard = await this.db.board.create({
-      data,
+      data: {
+        ...data,
+        projectId: board.projectId,
+      },
     });
 
     return BoardMapper.toDomain(newBoard);
