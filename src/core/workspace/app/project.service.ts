@@ -18,6 +18,7 @@ import {
 } from '../domain/types/project.repository.interface';
 import { CreateProjectDto } from '../dto/create-project.dto';
 import { UpdateProjectDto } from '../dto/update-project.dto';
+import { BoardMapper } from '../infrastructure/mapper/board.mapper';
 import { ProjectMapper } from '../infrastructure/mapper/project.mapper';
 
 @Injectable()
@@ -103,6 +104,21 @@ export class ProjectService {
   async addToFavorites(projectId: string, userId: string) {
     try {
       return await this.projectRepository.addToFavorites(projectId, userId);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Project not found');
+      }
+      throw error;
+    }
+  }
+
+  async getProjectBoards(projectId: string) {
+    try {
+      const boards = await this.boardRepository.findByProjectId(projectId);
+      return boards.map((board) => BoardMapper.toResponse(board));
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&

@@ -6,7 +6,7 @@ export interface ProjectProps {
   description: string | null;
   workspaceId: string;
   color: string;
-  isFavorite?: boolean; // 👈 Контекстный флаг для юзера
+  isFavorite?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,7 +30,7 @@ export class Project {
       description: props.description ?? null,
       workspaceId: props.workspaceId,
       color: props.color,
-      isFavorite: false, // Новый проект изначально не в избранном
+      isFavorite: false,
       createdAt: now,
       updatedAt: now,
     });
@@ -71,12 +71,10 @@ export class Project {
     return this.props.color;
   }
 
-  // 👈 Геттер для фронтенда/DTO
   get isFavorite(): boolean {
     return this.props.isFavorite ?? false;
   }
 
-  // 👈 Метод мутации прямо в домене (если нужно изменить состояние в памяти)
   setFavorite(isFavorite: boolean): void {
     this.props.isFavorite = isFavorite;
   }

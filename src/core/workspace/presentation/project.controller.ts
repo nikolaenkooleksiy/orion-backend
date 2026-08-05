@@ -50,4 +50,9 @@ export class ProjectController {
   ) {
     return this.projectService.addToFavorites(projectId, payload.sub);
   }
+
+  @Get(':projectId/boards')
+  async getProjectBoards(@Param('projectId') projectId: string) {
+    return this.projectService.getProjectBoards(projectId);
+  }
 }
