@@ -5,6 +5,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AuthModule } from './core/auth/auth.module';
 import { UserModule } from './core/user/user.module';
+import { ProjectModule } from './core/project/project.module';
 import { WorkspaceModule } from './core/workspace/workspace.module';
 import { PrismaModule } from './infrastructure/database/prisma.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
@@ -18,6 +19,7 @@ import { StorageModule } from './infrastructure/storage/storage.module';
     UserModule,
     AuthModule,
     WorkspaceModule,
+    ProjectModule,
     StorageModule,
   ],
   providers: [
