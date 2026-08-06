@@ -130,6 +130,7 @@ export class ProjectService {
   async getProjectBoards(projectId: string) {
     try {
       const boards = await this.boardRepository.findByProjectId(projectId);
+
       return boards.map((board) => BoardMapper.toResponse(board));
     } catch (error) {
       if (

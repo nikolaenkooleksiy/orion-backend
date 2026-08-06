@@ -4,7 +4,7 @@ import { BoardResponseDto } from '../../dto/board-response.dto';
 
 export class BoardMapper {
   static toDomain(board: PrismaBoard): BoardModel {
-    return BoardModel.create({ ...board });
+    return BoardModel.restore({ ...board });
   }
 
   static toPersistence(board: BoardModel): PrismaBoard {
