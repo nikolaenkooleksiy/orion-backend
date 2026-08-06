@@ -7,11 +7,16 @@ import {
 import { Prisma } from '@prisma/client';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
 import { BoardModel } from '../domain/model/board.model';
+import { ListModel } from '../domain/model/list.model';
 import { Project } from '../domain/model/project.model';
 import {
   BOARD_REPOSITORY,
   type IBoardRepository,
 } from '../domain/types/board.repository.interface';
+import {
+  type IListRepository,
+  LIST_REPOSITORY,
+} from '../domain/types/list.repository.interface';
 import {
   type IProjectRepository,
   PROJECT_REPOSITORY,
@@ -29,6 +34,7 @@ export class ProjectService {
     private readonly projectRepository: IProjectRepository,
     @Inject(BOARD_REPOSITORY)
     private readonly boardRepository: IBoardRepository,
+    @Inject(LIST_REPOSITORY) private readonly listRepository: IListRepository,
 
     private readonly storageService: StorageService,
   ) {}
@@ -43,18 +49,23 @@ export class ProjectService {
     try {
       const project = Project.create({ ...dto, color: 'bg-blue-500' });
 
-      const created = await this.projectRepository.create(project);
+      const board = BoardModel.create({
+        name: dto.boardName ?? 'Default Board',
+        projectId: project.id,
+      });
 
-      const defaultBoardName = dto.boardName ?? 'Default Board';
-
-      await this.boardRepository.create(
-        BoardModel.create({
-          name: defaultBoardName,
-          projectId: created.id,
-        }),
+      const defaultLists = ['To Do', 'Doing', 'Done'].map((name) =>
+        ListModel.create({ name, boardId: board.id }),
       );
 
-      return ProjectMapper.toResponse(created);
+      await this.projectRepository.create(project);
+      await this.boardRepository.create(board);
+
+      await Promise.all(
+        defaultLists.map((list) => this.listRepository.create(list)),
+      );
+
+      return ProjectMapper.toResponse(project);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
