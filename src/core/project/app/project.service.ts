@@ -147,6 +147,16 @@ export class ProjectService {
     try {
       const board = BoardModel.create({ ...body, projectId });
 
+      const defaultLists = ['To Do', 'Doing', 'Done'].map((name) =>
+        ListModel.create({ name, boardId: board.id }),
+      );
+
+      await this.boardRepository.create(board);
+
+      await Promise.all(
+        defaultLists.map((list) => this.listRepository.create(list)),
+      );
+
       await this.boardRepository.create(board);
     } catch (error) {
       if (

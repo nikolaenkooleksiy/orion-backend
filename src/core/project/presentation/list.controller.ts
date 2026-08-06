@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ListService } from '../app/list.service';
 import { CreateListDto } from '../dto/create-list.dto';
 import { UpdateListDto } from '../dto/update-list.dto';
@@ -13,12 +21,18 @@ export class ListController {
   }
 
   @Post(':boardId')
-  async createList(@Param('boardId') boardId: string, body: CreateListDto) {
+  async createList(
+    @Param('boardId') boardId: string,
+    @Body() body: CreateListDto,
+  ) {
     return this.listService.createList(boardId, body);
   }
 
   @Patch(':listId')
-  async updateList(@Param('listId') listId: string, body: UpdateListDto) {
+  async updateList(
+    @Param('listId') listId: string,
+    @Body() body: UpdateListDto,
+  ) {
     return this.listService.updateList(listId, body);
   }
 
