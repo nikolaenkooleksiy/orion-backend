@@ -124,6 +124,24 @@ model List {
   board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId String  @map("board_id")
 
+  tasks Task[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+
+model Task {
+  id String @id @default(uuid())
+
+  title String
+  description String?
+
+  position Float @default(0) 
+
+  list   List @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId String  @map("list_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
