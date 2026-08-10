@@ -106,6 +106,7 @@ model Board {
   name String
 
   Lists List[]
+  tasks Task[]
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String  @map("project_id")
@@ -141,6 +142,9 @@ model Task {
 
   list   List @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String  @map("list_id")
+
+  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String   @map("board_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

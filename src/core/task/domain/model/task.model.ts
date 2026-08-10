@@ -3,14 +3,20 @@ import { randomUUID } from 'crypto';
 interface TaskModelProps {
   id: string;
   title: string;
+  boardId: string;
+  listId: string;
   description: string | null;
   position: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface CreateTaskModelProps {
   title: string;
   description: string | null;
-  position: number;
+  boardId: string;
+  listId: string;
+  position?: number;
 }
 
 export class TaskModel {
@@ -20,8 +26,12 @@ export class TaskModel {
     return new TaskModel({
       id: randomUUID(),
       title: props.title,
+      listId: props.listId,
+      boardId: props.boardId,
       description: props.description,
-      position: props.position,
+      position: props.position ?? 1000,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
   }
 
@@ -43,5 +53,21 @@ export class TaskModel {
 
   get position(): number {
     return this.props.position;
+  }
+
+  get boardId(): string {
+    return this.props.boardId;
+  }
+
+  get listId(): string {
+    return this.props.listId;
+  }
+
+  get createdAt(): Date {
+    return this.props.createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this.props.updatedAt;
   }
 }

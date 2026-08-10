@@ -4,20 +4,19 @@ import { TaskResponseDto } from '../../dto/task-response.dto';
 
 export class TaskMapper {
   static toModel(task: PrismaTask): TaskModel {
-    return TaskModel.restore({
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      position: task.position,
-    });
+    return TaskModel.restore({ ...task });
   }
 
-  static toPersistence(task: TaskModel) {
+  static toPersistence(task: TaskModel): PrismaTask {
     return {
       id: task.id,
       title: task.title,
       description: task.description,
+      boardId: task.boardId,
+      listId: task.listId,
       position: task.position,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
     };
   }
 
