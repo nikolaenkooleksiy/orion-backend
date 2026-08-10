@@ -16,7 +16,7 @@ export class TaskRepository implements ITaskRepository {
     return tasks.map((t) => TaskMapper.toModel(t));
   }
 
-  async getTaskById(taskId: string): Promise<TaskModel | null> {
+  async getTaskById(taskId: string): Promise<TaskModel> {
     const task = await this.db.task.findUniqueOrThrow({
       where: { id: taskId },
     });

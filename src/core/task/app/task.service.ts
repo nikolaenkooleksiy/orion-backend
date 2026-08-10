@@ -6,6 +6,7 @@ import {
   TASK_REPOSITORY,
 } from '../domain/types/task.repository.interface';
 import { CreateTaskDto } from '../dto/create-task.dto';
+import { TaskMapper } from '../infrastructure/mapper/task.mapper';
 
 @Injectable()
 export class TaskService {
@@ -14,12 +15,16 @@ export class TaskService {
   ) {}
 
   async getAllTasks(boardId: string) {
-    return this.taskRepository.getAllTasks(boardId);
+    const tasks = await this.taskRepository.getAllTasks(boardId);
+
+    return tasks.map((task) => TaskMapper.toResponse(task));
   }
 
   async getTaskById(taskId: string) {
     try {
-      return this.taskRepository.getTaskById(taskId);
+      const task = await this.taskRepository.getTaskById(taskId);
+
+      return TaskMapper.toResponse(task);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
