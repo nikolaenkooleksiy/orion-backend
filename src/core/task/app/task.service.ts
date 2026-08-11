@@ -17,7 +17,7 @@ export class TaskService {
   async getAllTasks(boardId: string) {
     const tasks = await this.taskRepository.getAllTasks(boardId);
 
-    return tasks.map((task) => TaskMapper.toResponse(task));
+    return TaskMapper.toGroupedResponse(tasks);
   }
 
   async getTaskById(taskId: string) {

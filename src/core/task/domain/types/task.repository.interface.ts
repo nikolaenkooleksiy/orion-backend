@@ -3,7 +3,7 @@ import { TaskModel } from '../model/task.model';
 export const TASK_REPOSITORY = Symbol('TASK_REPOSITORY');
 
 export interface ITaskRepository {
-  getAllTasks(boardId: string): Promise<TaskModel[]>;
+  getAllTasks(boardId: string): Promise<Record<string, TaskModel[]>>;
   getTaskById(taskId: string): Promise<TaskModel>;
 
   createTask(task: TaskModel): Promise<void>;

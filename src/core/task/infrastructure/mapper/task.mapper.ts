@@ -26,7 +26,21 @@ export class TaskMapper {
       title: task.title,
       description: task.description,
       position: task.position,
-      createdAt: new Date(),
+      createdAt: task.createdAt,
     };
+  }
+
+  static toGroupedResponse(
+    groupedTasks: Record<string, TaskModel[]>,
+  ): Record<string, TaskResponseDto[]> {
+    const response: Record<string, TaskResponseDto[]> = {};
+
+    for (const listName in groupedTasks) {
+      response[listName] = groupedTasks[listName].map((task) =>
+        this.toResponse(task),
+      );
+    }
+
+    return response;
   }
 }

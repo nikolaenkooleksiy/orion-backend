@@ -8,14 +8,33 @@ import { TaskMapper } from '../mapper/task.mapper';
 export class TaskRepository implements ITaskRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async getAllTasks(boardId: string): Promise<TaskModel[]> {
+  async getAllTasks(boardId: string): Promise<Record<string, TaskModel[]>> {
     const tasks = await this.db.task.findMany({
       where: { boardId },
+      include: {
+        list: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
-    return tasks.map((t) => TaskMapper.toModel(t));
-  }
+    return tasks.reduce(
+      (acc, task) => {
+        const listName = task.list.name;
 
+        if (!acc[listName]) {
+          acc[listName] = [];
+        }
+
+        acc[listName].push(TaskMapper.toModel(task));
+
+        return acc;
+      },
+      {} as Record<string, TaskModel[]>,
+    );
+  }
   async getTaskById(taskId: string): Promise<TaskModel> {
     const task = await this.db.task.findUniqueOrThrow({
       where: { id: taskId },
