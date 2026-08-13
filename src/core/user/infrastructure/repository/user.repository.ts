@@ -40,7 +40,7 @@ export class UserRepository implements IUserRepository {
       where: {
         provider_providerId: {
           provider: user.provider,
-          providerId: user.providerId,
+          providerId: user.providerId!,
         },
       },
       create: data,

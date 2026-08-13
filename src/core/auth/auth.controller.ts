@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request, Response } from 'express';
-import { Public } from 'src/common/decorators';
+import { Public } from 'src/common/decorators/is-public.decorator';
 
 @Controller('auth')
 export class AuthController {

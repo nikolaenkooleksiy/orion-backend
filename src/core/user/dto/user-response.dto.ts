@@ -9,7 +9,7 @@ export class UserResponseType {
   id: string;
 
   @Field()
-  username: string;
+  name: string;
 
   @Field(() => String, { nullable: true })
   avatarUrl: string | null;

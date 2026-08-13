@@ -39,7 +39,7 @@ export class TaskModel {
       boardId: props.boardId,
       creatorId: props.creatorId,
       description: props.description,
-      approvalStatus: props.approvalStatus ?? TaskApprovalStatus.Pending,
+      approvalStatus: props.approvalStatus ?? TaskApprovalStatus.PENDING,
       priority: props.priority ?? TaskPriority.LOW,
       position: props.position ?? 1000,
       dueDate: null,

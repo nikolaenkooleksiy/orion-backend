@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserRole } from '@prisma/client';
 import { UserService } from 'src/core/user/app/user.service';
 
 import { JwtPayload } from 'src/common/types/jwt-payload.type';
@@ -22,7 +21,7 @@ export class AuthService {
   async login(dto: CreateUserDto) {
     const user = await this.userService.upsert(dto);
 
-    return this.generateToken(user.id, user.role);
+    return this.generateToken(user.id);
   }
 
   async refresh(refreshToken: string) {
@@ -44,15 +43,15 @@ export class AuthService {
         throw new NotFoundException('errors.server.user_not_found');
       }
 
-      return this.generateToken(user.id, user.role);
+      return this.generateToken(user.id);
     } catch {
       throw new UnauthorizedException('errors.server.invalid_refresh_token');
     }
   }
 
-  private async generateToken(userId: string, role: UserRole) {
+  private async generateToken(userId: string) {
     const accessToken = await this.jwtService.signAsync(
-      { sub: userId, role },
+      { sub: userId },
       {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
         expiresIn: '15m',
@@ -60,7 +59,7 @@ export class AuthService {
     );
 
     const refreshToken = await this.jwtService.signAsync(
-      { sub: userId, role },
+      { sub: userId },
       {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
         expiresIn: '31d',

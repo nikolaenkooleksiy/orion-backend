@@ -1,23 +1,21 @@
-import { UserRole, type AuthProvider } from '@prisma/client';
+import { type AuthProvider } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 export interface CreateUserProps {
-  username: string;
+  name: string;
   email: string;
   provider: AuthProvider;
-  providerId: string;
+  providerId: string | null;
   avatarUrl?: string | null;
-  role?: UserRole;
 }
 
 export interface UserProps {
   id: string;
-  username: string;
+  name: string;
   avatarUrl: string | null;
   email: string;
-  role: UserRole;
   provider: AuthProvider;
-  providerId: string;
+  providerId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,10 +28,9 @@ export class User {
 
     return new User({
       id: id ?? randomUUID(),
-      username: props.username,
+      name: props.name,
       email: props.email,
       avatarUrl: props.avatarUrl ?? null,
-      role: props.role ?? UserRole.User,
       provider: props.provider,
       providerId: props.providerId,
       createdAt: now,
@@ -50,11 +47,6 @@ export class User {
     this.props.updatedAt = new Date();
   }
 
-  public updateRole(role: UserRole): void {
-    this.props.role = role;
-    this.props.updatedAt = new Date();
-  }
-
   public toProps(): UserProps {
     return { ...this.props };
   }
@@ -63,8 +55,8 @@ export class User {
     return this.props.id;
   }
 
-  get username(): string {
-    return this.props.username;
+  get name(): string {
+    return this.props.name;
   }
 
   get avatarUrl(): string | null {
@@ -75,15 +67,11 @@ export class User {
     return this.props.email;
   }
 
-  get role(): UserRole {
-    return this.props.role;
-  }
-
   get provider(): AuthProvider {
     return this.props.provider;
   }
 
-  get providerId(): string {
+  get providerId(): string | null {
     return this.props.providerId;
   }
 

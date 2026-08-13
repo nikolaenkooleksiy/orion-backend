@@ -3,7 +3,7 @@ import { IsEmail, IsEnum, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  username: string;
+  name: string;
 
   @IsEmail()
   email: string;

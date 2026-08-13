@@ -68,7 +68,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
         members: {
           create: {
             userId: memberId,
-            role: 'Admin',
+            role: 'ADMIN',
           },
         },
       },

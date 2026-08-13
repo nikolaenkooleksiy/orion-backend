@@ -29,10 +29,9 @@ export class InMemoryUserRepository implements IUserRepository {
   upsert(user: User): Promise<User> {
     const newUser = User.create({
       email: user.email,
-      username: user.username,
+      name: user.name,
       provider: user.provider,
       providerId: user.providerId,
-      role: user.role,
       avatarUrl: user.avatarUrl,
     });
 
@@ -49,10 +48,9 @@ export class InMemoryUserRepository implements IUserRepository {
     const updated = User.create(
       {
         email: user.email ?? existing.email,
-        username: user.username ?? existing.username,
+        name: user.name ?? existing.name,
         provider: existing.provider,
         providerId: existing.providerId,
-        role: user.role ?? existing.role,
         avatarUrl: user.avatarUrl ?? existing.avatarUrl,
       },
       userId,
