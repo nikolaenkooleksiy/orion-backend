@@ -60,6 +60,7 @@ export class TaskRepository implements ITaskRepository {
           description: task.description,
           listId: task.listId,
           boardId: task.boardId,
+          creatorId: task.creatorId,
           position: newPosition,
         },
       });

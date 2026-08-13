@@ -1,3 +1,4 @@
+import { TaskApprovalStatus, TaskPriority } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 interface TaskModelProps {
@@ -5,8 +6,12 @@ interface TaskModelProps {
   title: string;
   boardId: string;
   listId: string;
+  creatorId: string;
+  approvalStatus?: TaskApprovalStatus;
+  priority?: TaskPriority;
   description: string | null;
   position: number;
+  dueDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +21,10 @@ interface CreateTaskModelProps {
   description: string | null;
   boardId: string;
   listId: string;
+  creatorId: string;
+  approvalStatus?: TaskApprovalStatus;
+
+  priority?: TaskPriority;
   position?: number;
 }
 
@@ -28,8 +37,12 @@ export class TaskModel {
       title: props.title,
       listId: props.listId,
       boardId: props.boardId,
+      creatorId: props.creatorId,
       description: props.description,
+      approvalStatus: props.approvalStatus ?? TaskApprovalStatus.Pending,
+      priority: props.priority ?? TaskPriority.LOW,
       position: props.position ?? 1000,
+      dueDate: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -69,5 +82,21 @@ export class TaskModel {
 
   get updatedAt(): Date {
     return this.props.updatedAt;
+  }
+
+  get creatorId(): string {
+    return this.props.creatorId;
+  }
+
+  get approvalStatus(): TaskApprovalStatus {
+    return this.props.approvalStatus!;
+  }
+
+  get priority(): TaskPriority {
+    return this.props.priority!;
+  }
+
+  get dueDate(): Date | null {
+    return this.props.dueDate;
   }
 }

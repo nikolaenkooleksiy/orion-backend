@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { CurrentUser } from 'src/common/decorators';
+import { type JwtPayload } from 'src/common/types';
 import { TaskService } from '../app/task.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 
@@ -12,7 +14,7 @@ export class TaskController {
   }
 
   @Post()
-  createTask(@Body() body: CreateTaskDto) {
-    return this.taskService.createTask(body);
+  createTask(@CurrentUser() payload: JwtPayload, @Body() body: CreateTaskDto) {
+    return this.taskService.createTask(payload.sub, body);
   }
 }

@@ -34,9 +34,9 @@ export class TaskService {
     }
   }
 
-  async createTask(body: CreateTaskDto) {
+  async createTask(creatorId: string, body: CreateTaskDto) {
     try {
-      const data = TaskModel.create({ ...body });
+      const data = TaskModel.create({ ...body, creatorId });
 
       return this.taskRepository.createTask(data);
     } catch (error) {
