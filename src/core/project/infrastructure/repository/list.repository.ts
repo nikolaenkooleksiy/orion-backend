@@ -7,6 +7,13 @@ import { ListMapper } from '../mapper/list.mapper';
 @Injectable()
 export class ListRepository implements IListRepository {
   constructor(private readonly db: PrismaService) {}
+  async findById(listId: string): Promise<ListModel> {
+    const list = await this.db.list.findUniqueOrThrow({
+      where: { id: listId },
+    });
+
+    return ListMapper.toDomain(list);
+  }
 
   async findByBoardId(boardId: string): Promise<ListModel[]> {
     const lists = await this.db.list.findMany({
