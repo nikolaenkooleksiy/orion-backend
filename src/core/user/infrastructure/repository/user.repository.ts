@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
+import { User } from '../../domain/model/user.model';
 import { type IUserRepository } from '../../domain/types/user.repository.interface';
 import { UserMapper } from '../mapper/user.mapper';
 
@@ -17,14 +17,6 @@ export class UserRepository implements IUserRepository {
   async findById(userId: string): Promise<User> {
     const user = await this.db.user.findUniqueOrThrow({
       where: { id: userId },
-    });
-
-    return UserMapper.toModel(user);
-  }
-
-  async findByUsername(username: string): Promise<User> {
-    const user = await this.db.user.findUniqueOrThrow({
-      where: { username },
     });
 
     return UserMapper.toModel(user);

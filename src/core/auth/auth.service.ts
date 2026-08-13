@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@prisma/client';
-import { UserService } from 'src/core/user/user.service';
+import { UserService } from 'src/core/user/app/user.service';
 
 import { JwtPayload } from 'src/common/types/jwt-payload.type';
 import { CreateUserDto } from 'src/core/user/dto/create-user.dto';

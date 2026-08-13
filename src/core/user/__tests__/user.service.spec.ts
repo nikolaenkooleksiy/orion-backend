@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from '../dto/create-user.dto';
 
-import { UserService } from '../user.service';
+import { UserService } from '../app/user.service';
 import { USER_REPOSITORY } from '../domain/types/user.repository.interface';
 import { InMemoryUserRepository } from '../infrastructure/repository/in-memory.user.repository';
 
@@ -10,7 +10,7 @@ const mockDto: CreateUserDto = {
   email: 'test@example.com',
   avatarUrl: 'https://example.com/avatar.jpg',
   providerId: '',
-  provider: 'LOCAL',
+  provider: 'Local',
 };
 
 describe('UserService', () => {
@@ -30,11 +30,7 @@ describe('UserService', () => {
     service = module.get<UserService>(UserService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
-  describe('create', () => {
+  describe('create new user', () => {
     it('should create user and return response', async () => {
       const user = await service.upsert(mockDto);
 
@@ -65,22 +61,6 @@ describe('UserService', () => {
 
     it('should throw when user not found', async () => {
       await expect(service.findById('non-existent-id')).rejects.toThrow(
-        'User not found',
-      );
-    });
-  });
-
-  describe('findByUsername', () => {
-    it('should return user by username', async () => {
-      await service.upsert(mockDto);
-      const found = await service.findByUsername(mockDto.username);
-
-      expect(found).toBeDefined();
-      expect(found.username).toBe(mockDto.username);
-    });
-
-    it('should throw when user not found', async () => {
-      await expect(service.findByUsername('nonexistent')).rejects.toThrow(
         'User not found',
       );
     });

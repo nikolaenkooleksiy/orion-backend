@@ -1,7 +1,7 @@
 import { Query, Resolver } from '@nestjs/graphql';
 import { Public } from 'src/common/decorators';
+import { UserService } from '../app/user.service';
 import { UserResponseType } from '../dto/user-response.dto';
-import { UserService } from '../user.service';
 
 @Resolver(() => UserResponseType)
 export class UsersResolver {

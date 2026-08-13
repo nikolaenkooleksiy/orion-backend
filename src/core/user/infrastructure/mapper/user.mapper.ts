@@ -3,7 +3,9 @@ import { User } from '../../domain/model/user.model';
 
 export class UserMapper {
   static toModel(user: PrismaUser): User {
-    return new User(user);
+    return User.restore({
+      ...user,
+    });
   }
 
   static toPersistence(user: User): Prisma.UserCreateInput {
