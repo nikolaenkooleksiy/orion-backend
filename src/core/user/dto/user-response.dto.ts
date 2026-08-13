@@ -1,10 +1,28 @@
-import { type UserRole } from '@prisma/client';
+import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { AuthProvider } from '@prisma/client';
 
-export class UserResponseDto {
+registerEnumType(AuthProvider, { name: 'AuthProvider' });
+
+@ObjectType('User')
+export class UserResponseType {
+  @Field(() => ID)
   id: string;
+
+  @Field()
   username: string;
-  email: string;
+
+  @Field(() => String, { nullable: true })
   avatarUrl: string | null;
-  role: UserRole;
+
+  @Field()
+  email: string;
+
+  @Field(() => AuthProvider)
+  provider!: AuthProvider;
+
+  @Field()
   createdAt: Date;
+
+  @Field()
+  updatedAt: Date;
 }

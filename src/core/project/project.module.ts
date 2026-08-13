@@ -8,11 +8,8 @@ import { PROJECT_REPOSITORY } from './domain/types/project.repository.interface'
 import { BoardRepository } from './infrastructure/repository/board.repository';
 import { ListRepository } from './infrastructure/repository/list.repository';
 import { ProjectRepository } from './infrastructure/repository/project.repository';
-import { ListController } from './presentation/list.controller';
-import { ProjectController } from './presentation/project.controller';
 
 @Module({
-  controllers: [ProjectController, ListController],
   providers: [
     ProjectService,
     StorageService,

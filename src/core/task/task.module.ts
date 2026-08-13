@@ -4,7 +4,6 @@ import { ListRepository } from '../project/infrastructure/repository/list.reposi
 import { TaskService } from './app/task.service';
 import { TASK_REPOSITORY } from './domain/types/task.repository.interface';
 import { TaskRepository } from './infrastructure/repository/task.repository';
-import { TaskController } from './presentation/task.controller';
 
 @Module({
   providers: [
@@ -18,6 +17,5 @@ import { TaskController } from './presentation/task.controller';
       useClass: ListRepository,
     },
   ],
-  controllers: [TaskController],
 })
 export class TaskModule {}

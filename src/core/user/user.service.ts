@@ -6,7 +6,6 @@ import {
 } from './domain/types/user.repository.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserMapper } from './infrastructure/mapper/user.mapper';
 
 @Injectable()
 export class UserService {
@@ -15,49 +14,37 @@ export class UserService {
   ) {}
 
   async findAll() {
-    const users = await this.userRepository.findAll();
-    return users.map((user) => UserMapper.toResponse(user));
+    return this.userRepository.findAll();
   }
 
   async findById(userId: string) {
-    const user = await this.userRepository.findById(userId);
-    return UserMapper.toResponse(user);
+    return this.userRepository.findById(userId);
   }
 
   async findByUsername(username: string) {
-    const user = await this.userRepository.findByUsername(username);
-    return UserMapper.toResponse(user);
+    return this.userRepository.findByUsername(username);
   }
 
   async findByEmail(email: string) {
-    const user = await this.userRepository.findByEmail(email);
-    return UserMapper.toResponse(user);
+    return this.userRepository.findByEmail(email);
   }
 
   async upsert(dto: CreateUserDto) {
     const userData = new User({
       id: crypto.randomUUID(),
-      username: dto.username,
-      email: dto.email,
-      avatarUrl: dto.avatarUrl,
-      role: 'User',
-      provider: dto.provider,
-      providerId: dto.providerId,
+      ...dto,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    const user = await this.userRepository.upsert(userData);
-
-    return UserMapper.toResponse(user);
+    return this.userRepository.upsert(userData);
   }
 
   async update(userId: string, dto: UpdateUserDto) {
-    const updated = await this.userRepository.update(userId, dto);
-    return UserMapper.toResponse(updated);
+    return this.userRepository.update(userId, dto);
   }
 
-  async delete(userId: string) {
+  async delete(userId: string): Promise<void> {
     await this.userRepository.delete(userId);
   }
 }
