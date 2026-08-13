@@ -5,11 +5,12 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { type Request } from 'express';
 
-import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
 import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
+import { ROLES_KEY } from '../decorators/roles.decorator';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -34,10 +35,9 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = this.getRequest(context);
 
-    const user = request.user;
-
+    const user = request?.user;
     const userRole = user?.role;
 
     if (!userRole || !requiredRoles.includes(userRole)) {
@@ -45,5 +45,14 @@ export class RolesGuard implements CanActivate {
     }
 
     return true;
+  }
+
+  private getRequest(context: ExecutionContext): Request {
+    if (context.getType<string>() === 'graphql') {
+      const gqlContext = GqlExecutionContext.create(context);
+      return gqlContext.getContext<{ req: Request }>().req;
+    }
+
+    return context.switchToHttp().getRequest<Request>();
   }
 }

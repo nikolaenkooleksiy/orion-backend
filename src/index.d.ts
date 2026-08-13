@@ -1,5 +1,5 @@
-import { type JwtPayload } from './shared/types/jwt-payload.type';
-import { CreateUserDto } from './user/dto/create-user.dto';
+import { type JwtPayload } from './common/types/jwt-payload.type';
+import { CreateUserDto } from './core/user/dto/create-user.dto';
 
 declare module 'express' {
   export interface Request {

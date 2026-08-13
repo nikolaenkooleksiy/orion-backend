@@ -1,8 +1,11 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { IS_PUBLIC_KEY } from '../decorators/is-public.decorator';
+
+import type { Request } from 'express';
 
 @Injectable()
 export class AuthGuard extends PassportAuthGuard('jwt') {
@@ -23,5 +26,14 @@ export class AuthGuard extends PassportAuthGuard('jwt') {
     }
 
     return super.canActivate(context);
+  }
+
+  getRequest(context: ExecutionContext): Request {
+    if (context.getType<string>() === 'graphql') {
+      const gqlContext = GqlExecutionContext.create(context);
+      return gqlContext.getContext<{ req: Request }>().req;
+    }
+
+    return context.switchToHttp().getRequest<Request>();
   }
 }
