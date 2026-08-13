@@ -9,5 +9,6 @@ export class TaskResponseDto {
   createdBy: string;
   position: number;
   dueDate: Date | null;
+  listTitle: string;
   createdAt: Date;
 }

@@ -35,7 +35,7 @@ export class TaskMapper {
     };
   }
 
-  static toResponse(task: TaskModel): TaskResponseDto {
+  static toResponse(task: TaskModel, listTitle: string): TaskResponseDto {
     return {
       id: task.id,
       title: task.title,
@@ -46,6 +46,7 @@ export class TaskMapper {
       approvalStatus: task.approvalStatus,
       priority: PRIORITY_TO_NUMBER[task.priority],
       createdBy: task.creatorId,
+      listTitle,
     };
   }
 
@@ -56,7 +57,7 @@ export class TaskMapper {
 
     for (const listName in groupedTasks) {
       response[listName] = groupedTasks[listName].map((task) =>
-        this.toResponse(task),
+        this.toResponse(task, listName),
       );
     }
 
