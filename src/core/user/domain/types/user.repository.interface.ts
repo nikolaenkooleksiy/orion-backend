@@ -5,9 +5,9 @@ export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 export interface IUserRepository {
   findAll(): Promise<User[]>;
   findById(userId: string): Promise<User>;
-
   findByEmail(email: string): Promise<User>;
 
+  create(user: User): Promise<User>;
   upsert(user: User): Promise<User>;
   update(userId: string, user: Partial<User>): Promise<User>;
 

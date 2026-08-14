@@ -1,12 +1,18 @@
-import { type AuthProvider } from '@prisma/client';
 import { randomUUID } from 'crypto';
+
+export enum AuthProvider {
+  LOCAL = 'LOCAL',
+  GOOGLE = 'GOOGLE',
+  GITHUB = 'GITHUB',
+}
 
 export interface CreateUserProps {
   name: string;
   email: string;
+  avatarUrl?: string | null;
+  password: string | null;
   provider: AuthProvider;
   providerId: string | null;
-  avatarUrl?: string | null;
 }
 
 export interface UserProps {
@@ -16,6 +22,7 @@ export interface UserProps {
   email: string;
   provider: AuthProvider;
   providerId: string | null;
+  password: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,6 +40,7 @@ export class User {
       avatarUrl: props.avatarUrl ?? null,
       provider: props.provider,
       providerId: props.providerId,
+      password: props.password,
       createdAt: now,
       updatedAt: now,
     });
@@ -42,13 +50,35 @@ export class User {
     return new User(props);
   }
 
+  public toProps(): UserProps {
+    return { ...this.props };
+  }
+
   public updateAvatarUrl(avatarUrl: string | null): void {
     this.props.avatarUrl = avatarUrl;
     this.props.updatedAt = new Date();
   }
 
-  public toProps(): UserProps {
-    return { ...this.props };
+  public changeName(name: string): void {
+    if (!name || name.trim() === '') {
+      throw new Error('Name cannot be empty');
+    }
+
+    this.props.name = name;
+    this.props.updatedAt = new Date();
+  }
+
+  public changePassword(newPasswordHash: string): void {
+    if (!newPasswordHash || newPasswordHash.trim() === '') {
+      throw new Error('Password cannot be empty');
+    }
+
+    if (this.props.password && this.props.password === newPasswordHash) {
+      throw new Error('New password cannot be the same as the old password');
+    }
+
+    this.props.password = newPasswordHash;
+    this.props.updatedAt = new Date();
   }
 
   get id(): string {
