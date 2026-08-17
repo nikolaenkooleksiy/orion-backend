@@ -6,11 +6,11 @@ import { type IUserRepository } from '../../domain/types/user.repository.interfa
 export class InMemoryUserRepository implements IUserRepository {
   private users = new Map<string, User>();
 
-  findAll(): Promise<User[]> {
+  findAll() {
     return Promise.resolve(Array.from(this.users.values()));
   }
 
-  findById(userId: string): Promise<User> {
+  findById(userId: string) {
     const user = this.users.get(userId);
 
     if (!user) return Promise.reject(new Error('User not found'));
@@ -18,7 +18,7 @@ export class InMemoryUserRepository implements IUserRepository {
     return Promise.resolve(user);
   }
 
-  findByEmail(email: string): Promise<User> {
+  findByEmail(email: string) {
     const user = Array.from(this.users.values()).find((u) => u.email === email);
 
     if (!user) return Promise.reject(new Error('User not found'));
@@ -26,42 +26,49 @@ export class InMemoryUserRepository implements IUserRepository {
     return Promise.resolve(user);
   }
 
-  upsert(user: User): Promise<User> {
-    const newUser = User.create({
-      email: user.email,
-      name: user.name,
-      provider: user.provider,
-      providerId: user.providerId,
-      avatarUrl: user.avatarUrl,
-    });
+  create(user: User) {
+    if (this.users.has(user.id)) {
+      return Promise.reject(new Error('User with this ID already exists'));
+    }
 
-    this.users.set(newUser.id, newUser);
+    for (const existing of this.users.values()) {
+      if (existing.email === user.email) {
+        return Promise.reject(new Error('User with email already exists'));
+      }
 
-    return Promise.resolve(newUser);
+      if (existing.name === user.name) {
+        return Promise.reject(new Error('User with name already exists'));
+      }
+    }
+
+    this.users.set(user.id, user);
+
+    return Promise.resolve(user);
   }
 
-  update(userId: string, user: Partial<User>): Promise<User> {
-    const existing = this.users.get(userId);
+  update(user: User) {
+    const existingUser = this.users.get(user.id);
 
-    if (!existing) return Promise.reject(new Error('User not found'));
+    if (!existingUser) return Promise.reject(new Error('User not found'));
 
-    const updated = User.create(
-      {
-        email: user.email ?? existing.email,
-        name: user.name ?? existing.name,
-        provider: existing.provider,
-        providerId: existing.providerId,
-        avatarUrl: user.avatarUrl ?? existing.avatarUrl,
-      },
-      userId,
+    this.users.set(user.id, user);
+
+    return Promise.resolve(user);
+  }
+  upsert(user: User) {
+    const existingUser = Array.from(this.users.values()).find(
+      (u) => u.email === user.email || u.id === user.id,
     );
 
-    this.users.set(userId, updated);
+    if (existingUser) {
+      this.users.delete(existingUser.id);
+    }
 
-    return Promise.resolve(updated);
+    this.users.set(user.id, user);
+    return Promise.resolve(user);
   }
 
-  delete(userId: string): Promise<void> {
+  delete(userId: string) {
     if (!this.users.has(userId))
       return Promise.reject(new Error('User not found'));
     this.users.delete(userId);

@@ -7,7 +7,7 @@ export class UsersResolver {
   constructor(private userService: UserService) {}
 
   @Query(() => [UserResponseType], { name: 'users' })
-  async findAllUsers(): Promise<UserResponseType[]> {
+  async findAllUsers() {
     return this.userService.findAll();
   }
 }

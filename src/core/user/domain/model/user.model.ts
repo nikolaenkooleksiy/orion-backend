@@ -9,7 +9,7 @@ export enum AuthProvider {
 export interface CreateUserProps {
   name: string;
   email: string;
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
   password: string | null;
   provider: AuthProvider;
   providerId: string | null;
@@ -30,11 +30,11 @@ export interface UserProps {
 export class User {
   private constructor(private props: UserProps) {}
 
-  static create(props: CreateUserProps, id?: string): User {
+  static create(props: CreateUserProps): User {
     const now = new Date();
 
     return new User({
-      id: id ?? randomUUID(),
+      id: randomUUID(),
       name: props.name,
       email: props.email,
       avatarUrl: props.avatarUrl ?? null,
@@ -99,6 +99,10 @@ export class User {
 
   get provider(): AuthProvider {
     return this.props.provider;
+  }
+
+  get password(): string | null {
+    return this.props.password;
   }
 
   get providerId(): string | null {

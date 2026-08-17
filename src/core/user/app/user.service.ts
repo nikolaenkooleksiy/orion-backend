@@ -4,7 +4,6 @@ import {
   type IUserRepository,
   USER_REPOSITORY,
 } from '../domain/types/user.repository.interface';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
@@ -25,16 +24,18 @@ export class UserService {
     return this.userRepository.findByEmail(email);
   }
 
-  async upsert(dto: CreateUserDto) {
-    const userData = User.create({
-      ...dto,
-    });
+  async update(userId: string, dto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findById(userId);
 
-    return this.userRepository.upsert(userData);
-  }
+    if (dto.name !== undefined) {
+      user.changeName(dto.name);
+    }
 
-  async update(userId: string, dto: UpdateUserDto) {
-    return this.userRepository.update(userId, dto);
+    if (dto.avatarUrl !== undefined) {
+      user.updateAvatarUrl(dto.avatarUrl);
+    }
+
+    return this.userRepository.update(user);
   }
 
   async delete(userId: string): Promise<void> {

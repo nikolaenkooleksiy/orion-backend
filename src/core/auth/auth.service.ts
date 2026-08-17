@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/core/user/app/user.service';
 
 import { JwtPayload } from 'src/common/types/jwt-payload.type';
-import { CreateUserDto } from 'src/core/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,12 +16,6 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
-
-  async login(dto: CreateUserDto) {
-    const user = await this.userService.upsert(dto);
-
-    return this.generateToken(user.id);
-  }
 
   async refresh(refreshToken: string) {
     if (!refreshToken) {

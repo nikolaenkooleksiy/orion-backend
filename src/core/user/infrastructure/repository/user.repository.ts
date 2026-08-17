@@ -8,13 +8,13 @@ import { UserMapper } from '../mapper/user.mapper';
 export class UserRepository implements IUserRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll() {
     const users = await this.db.user.findMany();
 
     return users.map((user) => UserMapper.toModel(user));
   }
 
-  async findById(userId: string): Promise<User> {
+  async findById(userId: string) {
     const user = await this.db.user.findUniqueOrThrow({
       where: { id: userId },
     });
@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
     return UserMapper.toModel(user);
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string) {
     const user = await this.db.user.findUniqueOrThrow({
       where: { email },
     });
@@ -30,34 +30,36 @@ export class UserRepository implements IUserRepository {
     return UserMapper.toModel(user);
   }
 
-  async upsert(user: User): Promise<User> {
+  async create(user: User) {
     const data = UserMapper.toPersistence(user);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, createdAt, ...updateData } = data;
+    const createdUser = await this.db.user.create({ data });
 
-    const userData = await this.db.user.upsert({
-      where: {
-        provider_providerId: {
-          provider: user.provider,
-          providerId: user.providerId!,
-        },
-      },
+    return UserMapper.toModel(createdUser);
+  }
+
+  async upsert(user: User) {
+    const data = UserMapper.toPersistence(user);
+
+    const updatedUser = await this.db.user.upsert({
+      where: { id: user.email },
+      update: data,
       create: data,
-      update: updateData,
     });
 
-    return UserMapper.toModel(userData);
+    return UserMapper.toModel(updatedUser);
   }
 
-  async update(userId: string, user: Partial<User>): Promise<User> {
-    const updated = await this.db.user.update({
-      where: { id: userId },
-      data: user,
+  async update(user: User) {
+    const data = UserMapper.toPersistence(user);
+
+    const updatedUser = await this.db.user.update({
+      where: { id: user.id },
+      data,
     });
-    return UserMapper.toModel(updated);
-  }
 
+    return UserMapper.toModel(updatedUser);
+  }
   async delete(userId: string): Promise<void> {
     await this.db.user.delete({ where: { id: userId } });
   }

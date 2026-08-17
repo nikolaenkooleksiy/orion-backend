@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-github2';
-import { CreateUserDto } from 'src/core/user/dto/create-user.dto';
 import { IGithubResponse } from '../types/github-response.type';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     accessToken: string,
     refreshToken: string,
     profile: IGithubResponse,
-  ): CreateUserDto {
+  ) {
     const { id, username, emails, photos } = profile;
 
     if (!emails?.length) {
@@ -30,12 +29,12 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       );
     }
 
-    return {
-      provider: 'GITHUB',
-      providerId: id,
-      name: username,
-      email: emails[0].value,
-      avatarUrl: photos?.[0]?.value ?? null,
-    };
+    // return {
+    //   provider: '',
+    //   providerId: id,
+    //   name: username,
+    //   email: emails[0].value,
+    //   avatarUrl: photos?.[0]?.value ?? null,
+    // };
   }
 }
