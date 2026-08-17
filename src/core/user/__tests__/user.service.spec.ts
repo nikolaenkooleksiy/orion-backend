@@ -6,11 +6,9 @@ import { USER_REPOSITORY } from '../domain/types/user.repository.interface';
 import { InMemoryUserRepository } from '../infrastructure/repository/in-memory.user.repository';
 
 const mockDto: CreateUserDto = {
-  username: 'testuser',
+  name: 'testuser',
   email: 'test@example.com',
-  avatarUrl: 'https://example.com/avatar.jpg',
-  providerId: '',
-  provider: 'Local',
+  password: 'password',
 };
 
 describe('UserService', () => {
@@ -31,32 +29,38 @@ describe('UserService', () => {
   });
 
   describe('create new user', () => {
-    it('should create user and return response', async () => {
-      const user = await service.upsert(mockDto);
+    it('should create user and return him', async () => {
+      const user = await service.create(mockDto);
 
       expect(user).toBeDefined();
       expect(user.id).toBeDefined();
-      expect(user.username).toBe(mockDto.username);
+      expect(user.name).toBe(mockDto.name);
       expect(user.email).toBe(mockDto.email);
-      expect(user.role).toBe('User');
     });
 
-    it('should set default values', async () => {
-      const user = await service.upsert(mockDto);
+    it('should throw when user with same email exists', async () => {
+      await service.create(mockDto);
+      await expect(service.create(mockDto)).rejects.toThrow(
+        'User with this email already exists',
+      );
+    });
 
-      expect(user.role).toBe('User');
-      expect(user.avatarUrl).toBe(mockDto.avatarUrl);
+    it('should throw when user with same name exists', async () => {
+      await service.create(mockDto);
+      await expect(
+        service.create({ ...mockDto, email: 'different@example.com' }),
+      ).rejects.toThrow('User with this name already exists');
     });
   });
 
   describe('findById', () => {
     it('should return user by id', async () => {
-      const created = await service.upsert(mockDto);
+      const created = await service.create(mockDto);
       const found = await service.findById(created.id);
 
       expect(found).toBeDefined();
       expect(found.id).toBe(created.id);
-      expect(found.username).toBe(mockDto.username);
+      expect(found.name).toBe(mockDto.name);
     });
 
     it('should throw when user not found', async () => {
@@ -68,7 +72,7 @@ describe('UserService', () => {
 
   describe('findByEmail', () => {
     it('should return user by email', async () => {
-      await service.upsert(mockDto);
+      await service.create(mockDto);
       const found = await service.findByEmail(mockDto.email);
 
       expect(found).toBeDefined();
@@ -84,27 +88,27 @@ describe('UserService', () => {
 
   describe('update', () => {
     it('should update user fields', async () => {
-      const created = await service.upsert(mockDto);
+      const created = await service.create(mockDto);
       const updated = await service.update(created.id, {
-        username: 'newname',
+        name: 'newname',
       });
 
-      expect(updated.username).toBe('newname');
+      expect(updated.name).toBe('newname');
 
       const found = await service.findById(created.id);
-      expect(found.username).toBe('newname');
+      expect(found.name).toBe('newname');
     });
 
     it('should throw when user not found', async () => {
       await expect(
-        service.update('non-existent-id', { username: 'newname' }),
+        service.update('non-existent-id', { name: 'newname' }),
       ).rejects.toThrow('User not found');
     });
   });
 
   describe('delete', () => {
     it('should delete user', async () => {
-      const created = await service.upsert(mockDto);
+      const created = await service.create(mockDto);
       await service.delete(created.id);
 
       const users = await service.findAll();

@@ -33,11 +33,11 @@ export class InMemoryUserRepository implements IUserRepository {
 
     for (const existing of this.users.values()) {
       if (existing.email === user.email) {
-        return Promise.reject(new Error('User with email already exists'));
+        return Promise.reject(new Error('User with this email already exists'));
       }
 
       if (existing.name === user.name) {
-        return Promise.reject(new Error('User with name already exists'));
+        return Promise.reject(new Error('User with this name already exists'));
       }
     }
 

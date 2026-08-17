@@ -9,10 +9,10 @@ export enum AuthProvider {
 export interface CreateUserProps {
   name: string;
   email: string;
-  avatarUrl: string | null;
-  password: string | null;
-  provider: AuthProvider;
-  providerId: string | null;
+  avatarUrl?: string | null;
+  password?: string | null;
+  provider?: AuthProvider;
+  providerId?: string | null;
 }
 
 export interface UserProps {
@@ -37,10 +37,10 @@ export class User {
       id: randomUUID(),
       name: props.name,
       email: props.email,
+      password: props.password ?? null,
+      provider: props.provider ?? AuthProvider.LOCAL,
+      providerId: props.providerId ?? null,
       avatarUrl: props.avatarUrl ?? null,
-      provider: props.provider,
-      providerId: props.providerId,
-      password: props.password,
       createdAt: now,
       updatedAt: now,
     });
