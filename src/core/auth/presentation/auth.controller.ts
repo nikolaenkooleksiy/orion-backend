@@ -70,6 +70,11 @@ export class AuthController {
   }
 
   @Public()
+  @UseGuards(AuthGuard('google'))
+  @Get('google')
+  async google() {}
+
+  @Public()
   @UseGuards(AuthGuard('github'))
   @Get('github')
   async github() {}
@@ -78,8 +83,22 @@ export class AuthController {
   @UseGuards(AuthGuard('github'))
   @Get('github/callback')
   async githubCallback(@Req() req: Request, @Res() res: Response) {
-    const userDto = req.user as unknown as OAuthLoginDto;
-    const tokens = await this.authService.loginWithOAuth(userDto);
+    const body = req.user as unknown as OAuthLoginDto;
+
+    const tokens = await this.authService.loginWithOAuth(body);
+
+    this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+
+    return res.redirect(this.configService.getOrThrow<string>('CORS_ORIGIN'));
+  }
+
+  @Public()
+  @UseGuards(AuthGuard('google'))
+  @Get('google/callback')
+  async googleCallback(@Req() req: Request, @Res() res: Response) {
+    const body = req.user as unknown as OAuthLoginDto;
+
+    const tokens = await this.authService.loginWithOAuth(body);
 
     this.setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
 
