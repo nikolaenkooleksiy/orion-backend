@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { hash } from 'argon2';
+import { OAuthLoginDto } from 'src/core/auth/dto/oauth-login.dto';
 import { User } from '../domain/model/user.model';
 import {
   type IUserRepository,
@@ -13,25 +15,27 @@ export class UserService {
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async findAll() {
     return this.userRepository.findAll();
   }
 
-  async findById(userId: string): Promise<User> {
+  async findById(userId: string) {
     return this.userRepository.findById(userId);
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string) {
     return this.userRepository.findByEmail(email);
   }
 
-  async create(body: CreateUserDto): Promise<User> {
-    const user = User.create(body);
+  async create(body: CreateUserDto) {
+    const passwordHash = await hash(body.password);
+
+    const user = User.create({ ...body, password: passwordHash });
 
     return this.userRepository.create(user);
   }
 
-  async update(userId: string, body: UpdateUserDto): Promise<User> {
+  async update(userId: string, body: UpdateUserDto) {
     const user = await this.userRepository.findById(userId);
 
     if (body.name !== undefined) {
@@ -45,7 +49,19 @@ export class UserService {
     return this.userRepository.update(user);
   }
 
-  async delete(userId: string): Promise<void> {
+  async upsert(body: OAuthLoginDto) {
+    const user = User.create({
+      name: body.name,
+      email: body.email,
+      avatarUrl: body.avatarUrl,
+      provider: body.provider,
+      providerId: body.providerId,
+    });
+
+    return this.userRepository.upsert(user);
+  }
+
+  async delete(userId: string) {
     await this.userRepository.delete(userId);
   }
 }

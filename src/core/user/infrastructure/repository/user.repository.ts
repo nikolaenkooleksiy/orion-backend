@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepository {
     const data = UserMapper.toPersistence(user);
 
     const updatedUser = await this.db.user.upsert({
-      where: { id: user.email },
+      where: { email: user.email },
       update: data,
       create: data,
     });

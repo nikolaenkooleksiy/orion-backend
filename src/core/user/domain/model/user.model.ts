@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 
 export enum AuthProvider {
-  LOCAL = 'LOCAL',
+  CREDENTIALS = 'CREDENTIALS',
   GOOGLE = 'GOOGLE',
   GITHUB = 'GITHUB',
 }
@@ -38,7 +38,7 @@ export class User {
       name: props.name,
       email: props.email,
       password: props.password ?? null,
-      provider: props.provider ?? AuthProvider.LOCAL,
+      provider: props.provider ?? AuthProvider.CREDENTIALS,
       providerId: props.providerId ?? null,
       avatarUrl: props.avatarUrl ?? null,
       createdAt: now,
