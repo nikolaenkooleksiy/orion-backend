@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-github2';
+import { AuthProvider } from 'src/core/user/domain/model/user.model';
+import { OAuthLoginDto } from '../../dto/oauth-login.dto';
 import { IGithubResponse } from '../types/github-response.type';
 
 @Injectable()
@@ -20,21 +22,21 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     accessToken: string,
     refreshToken: string,
     profile: IGithubResponse,
-  ) {
+  ): OAuthLoginDto {
     const { id, username, emails, photos } = profile;
 
     if (!emails?.length) {
       throw new BadRequestException(
-        'Помилка авторизації через GitHub: не знайдено електронну адресу користувача.',
+        'Error: No email associated with this GitHub account. Please make sure your email is public in your GitHub settings.',
       );
     }
 
-    // return {
-    //   provider: '',
-    //   providerId: id,
-    //   name: username,
-    //   email: emails[0].value,
-    //   avatarUrl: photos?.[0]?.value ?? null,
-    // };
+    return {
+      provider: AuthProvider.GITHUB,
+      providerId: id,
+      name: username,
+      email: emails[0].value,
+      avatarUrl: photos?.[0]?.value ?? null,
+    };
   }
 }
