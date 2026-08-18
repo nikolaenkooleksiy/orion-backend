@@ -1,8 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { IsString } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @IsString({ message: 'Avatar URL must be a string' })
-  avatarUrl?: string | null;
+@InputType()
+export class UpdateUserDto {
+  @Field(() => String, { nullable: true })
+  @IsOptional()
+  @IsString()
+  name?: string;
 }

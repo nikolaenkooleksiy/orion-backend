@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserDto } from '../dto/create-user.dto';
 
+import { StorageService } from 'src/infrastructure/storage/storage.service';
 import { UserService } from '../app/user.service';
 import { USER_REPOSITORY } from '../domain/types/user.repository.interface';
 import { InMemoryUserRepository } from '../infrastructure/repository/in-memory.user.repository';
@@ -13,6 +14,7 @@ const mockDto: CreateUserDto = {
 
 describe('UserService', () => {
   let service: UserService;
+  let storageService: StorageService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,10 +24,20 @@ describe('UserService', () => {
           provide: USER_REPOSITORY,
           useClass: InMemoryUserRepository,
         },
+        {
+          provide: StorageService,
+          useValue: {
+            getUploadUrl: jest.fn(),
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<UserService>(UserService);
+    storageService = module.get(StorageService);
+
+    jest.clearAllMocks();
   });
 
   describe('create new user', () => {
@@ -118,6 +130,35 @@ describe('UserService', () => {
     it('should throw when user not found', async () => {
       await expect(service.delete('non-existent-id')).rejects.toThrow(
         'User not found',
+      );
+    });
+  });
+
+  describe('generateUserImageUrl', () => {
+    it("should return upload url and key for user's avatar", async () => {
+      const userId = 'test-user-id';
+      const mockMeta = {
+        fileName: 'avatar.png',
+        contentType: 'image/png',
+      };
+
+      const mockStorageResponse = {
+        url: 'https://s3.amazonaws.com/bucket/users/test-user-id/avatar/uuid.png?signature',
+        key: 'users/test-user-id/avatar/uuid.png',
+      };
+
+      const getUploadUrlSpy = jest
+        .spyOn(storageService, 'getUploadUrl')
+        .mockResolvedValue(mockStorageResponse);
+
+      const result = await service.generateUserImageUrl(userId, mockMeta);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(mockStorageResponse);
+      expect(getUploadUrlSpy).toHaveBeenCalledWith(
+        `users/${userId}/avatar`,
+        mockMeta.fileName,
+        mockMeta.contentType,
       );
     });
   });

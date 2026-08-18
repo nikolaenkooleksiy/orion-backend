@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { hash } from 'argon2';
+import { FileInfo } from 'src/common/types/file-info.type';
 import { OAuthLoginDto } from 'src/core/auth/dto/oauth-login.dto';
+import { StorageService } from 'src/infrastructure/storage/storage.service';
 import { User } from '../domain/model/user.model';
 import {
   type IUserRepository,
@@ -13,6 +15,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 export class UserService {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    private readonly storageService: StorageService,
   ) {}
 
   async findAll() {
@@ -42,10 +45,6 @@ export class UserService {
       user.changeName(body.name);
     }
 
-    if (body.avatarUrl !== undefined) {
-      user.updateAvatarUrl(body.avatarUrl);
-    }
-
     return this.userRepository.update(user);
   }
 
@@ -63,5 +62,15 @@ export class UserService {
 
   async delete(userId: string) {
     await this.userRepository.delete(userId);
+  }
+
+  async generateUserImageUrl(userId: string, meta: FileInfo) {
+    const folder = `users/${userId}/avatar`;
+
+    return await this.storageService.getUploadUrl(
+      folder,
+      meta.fileName,
+      meta.contentType,
+    );
   }
 }

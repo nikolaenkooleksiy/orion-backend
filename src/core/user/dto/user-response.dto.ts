@@ -8,21 +8,21 @@ export class UserResponseType {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field(() => String)
   name: string;
 
   @Field(() => String, { nullable: true })
   avatarUrl: string | null;
 
-  @Field()
+  @Field(() => String)
   email: string;
 
   @Field(() => AuthProvider)
   provider!: AuthProvider;
 
-  @Field()
+  @Field(() => Date)
   createdAt: Date;
 
-  @Field()
+  @Field(() => Date)
   updatedAt: Date;
 }
