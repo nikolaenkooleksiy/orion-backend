@@ -108,8 +108,5 @@
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     }
-  },
-  "lint-staged": {
-    "*.ts": ["prettier --write","eslint --fix"]
   }
 }
