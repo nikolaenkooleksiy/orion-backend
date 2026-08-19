@@ -15,8 +15,7 @@ export class UserMapper {
       name: raw.name,
       email: raw.email,
       avatarUrl: raw.avatarUrl,
-      provider:
-        DomainAuthProvider[raw.provider as keyof typeof DomainAuthProvider],
+      provider: DomainAuthProvider[raw.provider],
       providerId: raw.providerId,
       password: raw.password,
       createdAt: raw.createdAt,
@@ -32,8 +31,7 @@ export class UserMapper {
       name: props.name,
       email: props.email,
       avatarUrl: props.avatarUrl,
-      provider:
-        PrismaAuthProvider[props.provider as keyof typeof PrismaAuthProvider],
+      provider: PrismaAuthProvider[props.provider],
       providerId: props.providerId,
       password: props.password,
       createdAt: props.createdAt,

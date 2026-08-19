@@ -4,11 +4,11 @@ enum WorkspaceRole {
 }
 
 model Workspace {
-  id          String   @id @default(uuid())
+  id          String   @id
   name        String
   description String?
   customUrl   String?  @unique
-  imageUrl    String?
+  imageKey    String
 
   members  WorkspaceMember[]
   projects Project[]
@@ -36,4 +36,3 @@ model WorkspaceMember {
   @@index([workspaceId])
   @@map("workspace_members")
 }
-
