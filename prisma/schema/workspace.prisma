@@ -1,7 +1,4 @@
-enum WorkspaceRole {
-  ADMIN
-  MEMBER
-}
+
 
 model Workspace {
   id          String   @id
@@ -10,7 +7,7 @@ model Workspace {
   customUrl   String?  @unique
   imageKey    String
 
-  members  WorkspaceMember[]
+  members  WorkspaceMembers[]
   projects Project[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -19,9 +16,8 @@ model Workspace {
   @@map("workspaces")
 }
 
-model WorkspaceMember {
+model WorkspaceMembers {
   id   String        @id @default(uuid())
-  role WorkspaceRole @default(MEMBER)
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
@@ -29,10 +25,48 @@ model WorkspaceMember {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String    @map("workspace_id")
 
+  role   WorkspaceRole @relation(fields: [roleId], references: [id])
+  roleId String        @map("role_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([userId, workspaceId])
   @@index([workspaceId])
   @@map("workspace_members")
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  code        String  @unique
+  category    String
+  description String?
+
+  roles WorkspaceRolePermission[]
+
+  @@map("permissions")
+}
+
+model WorkspaceRole {
+  id          String @id @default(uuid())
+  name        String
+  workspaceId String?
+  isSystem    Boolean @default(false)
+
+  members    WorkspaceMembers[]
+  permissions WorkspaceRolePermission[]
+
+  @@map("workspace_roles")
+}
+
+
+model WorkspaceRolePermission {
+  workspaceRoleId String
+  permissionId    String
+
+  role       WorkspaceRole @relation(fields: [workspaceRoleId], references: [id], onDelete: Cascade)
+  permission Permission    @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceRoleId, permissionId])
+  @@map("workspace_role_permissions")
 }
