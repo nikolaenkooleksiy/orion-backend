@@ -1,18 +1,40 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { SuccessResponseDto } from 'src/common/dto/success-response.dto';
 import { type JwtPayload } from 'src/common/types';
+import { WorkspaceMembersService } from '../app/workspace-members.service';
 import { WorkspaceService } from '../app/workspace.service';
 import { CreateWorkspaceDto } from '../dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from '../dto/update-workspace.dto';
-import { WorkspaceResponseType } from '../dto/workspace-response.dto';
+import { WorkspaceMembersResponseDto } from '../dto/workspace-members-response.dto';
+import { WorkspaceResponseDto } from '../dto/workspace-response.dto';
 import { WorkspaceSearchOptionsDto } from '../dto/workspace-search-options.dto';
 
-@Resolver(() => WorkspaceResponseType)
+@Resolver(() => WorkspaceResponseDto)
 export class WorkspaceResolver {
-  constructor(private readonly workspaceService: WorkspaceService) {}
+  constructor(
+    private readonly workspaceService: WorkspaceService,
+    private readonly workspaceMembersService: WorkspaceMembersService,
+  ) {}
 
-  @Query(() => [WorkspaceResponseType], { name: 'find_all_workspaces' })
+  @ResolveField('members', () => [WorkspaceMembersResponseDto], {
+    nullable: true,
+  })
+  async getAllWorkspaceMembers(
+    @Parent() workspace: WorkspaceResponseDto,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    return this.workspaceMembersService.findAll(workspace.id, payload.sub);
+  }
+
+  @Query(() => [WorkspaceResponseDto], { name: 'find_all_workspaces' })
   async findAllWorkspaces(
     @CurrentUser() payload: JwtPayload,
     @Args('options', { nullable: true }) options?: WorkspaceSearchOptionsDto,
@@ -23,7 +45,7 @@ export class WorkspaceResolver {
     );
   }
 
-  @Query(() => WorkspaceResponseType, { name: 'find_workspace_by_id' })
+  @Query(() => WorkspaceResponseDto, { name: 'find_workspace_by_id' })
   async findWorkspaceById(
     @CurrentUser() payload: JwtPayload,
     @Args('workspaceId') workspaceId: string,
@@ -34,7 +56,7 @@ export class WorkspaceResolver {
     );
   }
 
-  @Mutation(() => WorkspaceResponseType, { name: 'create_workspace' })
+  @Mutation(() => WorkspaceResponseDto, { name: 'create_workspace' })
   async createWorkspace(
     @CurrentUser() payload: JwtPayload,
     @Args('body') body: CreateWorkspaceDto,
@@ -42,7 +64,7 @@ export class WorkspaceResolver {
     return await this.workspaceService.createWorkspace(payload.sub, body);
   }
 
-  @Mutation(() => WorkspaceResponseType, { name: 'update_workspace' })
+  @Mutation(() => WorkspaceResponseDto, { name: 'update_workspace' })
   async updateWorkspace(
     @CurrentUser() payload: JwtPayload,
     @Args('workspaceId') workspaceId: string,

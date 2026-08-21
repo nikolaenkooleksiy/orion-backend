@@ -106,10 +106,6 @@ export class Workspace {
   }
 }
 
-//TODO: fix CRUD operations for workspaces, so that users can create, read, update and delete workspaces
-
 //TODO: add a custom URL system for workspaces, so that users can have a custom URL for their workspace instead of a random UUID
 
 //TODO: add invitation system for workspaces, so that users can be invited to join a workspace
-
-//TODO: add a system  user permissions for workspaces, so that users can have different levels of access to a workspace

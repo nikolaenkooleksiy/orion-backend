@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { WorkspaceMembersResponseDto } from './workspace-members-response.dto';
 
 @ObjectType('Workspace')
-export class WorkspaceResponseType {
+export class WorkspaceResponseDto {
   @Field(() => String)
   id: string;
 
@@ -22,4 +23,7 @@ export class WorkspaceResponseType {
 
   @Field(() => Date)
   updatedAt: Date;
+
+  @Field(() => [WorkspaceMembersResponseDto], { nullable: true })
+  members?: WorkspaceMembersResponseDto[];
 }
