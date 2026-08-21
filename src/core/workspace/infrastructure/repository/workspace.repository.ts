@@ -35,7 +35,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async findById(workspaceId: string, memberId: string) {
     const team = await this.db.workspace.findFirstOrThrow({
       where: {
-        id: workspaceId,
+        OR: [{ id: workspaceId }, { customUrl: workspaceId }],
         members: {
           some: {
             userId: memberId,

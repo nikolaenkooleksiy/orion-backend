@@ -41,14 +41,21 @@ export class WorkspaceInMemoryRepository implements IWorkspaceRepository {
     return Promise.resolve(result);
   }
 
-  async findById(workspaceId: string, memberId: string): Promise<Workspace> {
-    const workspace = this.workspaces.get(workspaceId);
+  async findById(identifier: string, memberId: string): Promise<Workspace> {
+    let workspace = this.workspaces.get(identifier);
+
+    if (!workspace) {
+      workspace = Array.from(this.workspaces.values()).find(
+        (w) => w.customUrl === identifier,
+      );
+    }
+
     if (!workspace) {
       throw new NotFoundException('Workspace not found');
     }
 
     const isMember = this.members.some(
-      (m) => m.workspaceId === workspaceId && m.userId === memberId,
+      (m) => m.workspaceId === workspace.id && m.userId === memberId,
     );
 
     if (!isMember) {

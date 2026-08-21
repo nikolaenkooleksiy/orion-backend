@@ -119,8 +119,20 @@ describe('WorkspaceService', () => {
         service.findWorkspaceById(created.id, 'stranger-id'),
       ).rejects.toThrow('You do not have access to this workspace');
     });
-  });
 
+    it('should return workspace by customUrl for an authorized user', async () => {
+      const created = await service.createWorkspace(mockOwnerId, mockDto);
+      const found = await service.findWorkspaceById(
+        created.customUrl || created.id,
+        mockOwnerId,
+      );
+
+      expect(found).toBeDefined();
+      expect(found.id).toBe(created.id);
+      expect(found.name).toBe(mockDto.name);
+      expect(found.customUrl).toBe(mockDto.customUrl);
+    });
+  });
   describe('update', () => {
     it('should update workspace fields', async () => {
       const created = await service.createWorkspace(mockOwnerId, mockDto);
