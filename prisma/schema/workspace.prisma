@@ -1,4 +1,7 @@
-
+enum WorkspaceRole {
+  OWNER
+  USER
+}
 
 model Workspace {
   id          String   @id
@@ -16,6 +19,7 @@ model Workspace {
   @@map("workspaces")
 }
 
+
 model WorkspaceMembers {
   id   String        @id @default(uuid())
 
@@ -25,8 +29,7 @@ model WorkspaceMembers {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   workspaceId String    @map("workspace_id")
 
-  role   WorkspaceRole @relation(fields: [roleId], references: [id])
-  roleId String        @map("role_id")
+  role WorkspaceRole @default(USER)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -34,15 +37,4 @@ model WorkspaceMembers {
   @@unique([userId, workspaceId])
   @@index([workspaceId])
   @@map("workspace_members")
-}
-
-model WorkspaceRole {
-  id          String @id @default(uuid())
-  name        String
-  workspaceId String?
-  isSystem    Boolean @default(false)
-
-  members WorkspaceMembers[]
-
-  @@map("workspace_roles")
 }

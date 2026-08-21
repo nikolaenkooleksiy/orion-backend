@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
 import { Workspace } from '../../domain/model/workspace.model';
 import {
-  IWorkspaceRepository,
+  type IWorkspaceRepository,
   WorkspaceSearchOptions,
 } from '../../domain/types/workspace.repository.interface';
 import { WorkspaceMapper } from '../mapper/workspace.mapper';
@@ -53,19 +53,11 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     const created = await this.db.$transaction(async (tx) => {
       const workspaceRecord = await tx.workspace.create({ data });
 
-      const ownerRole = await tx.workspaceRole.create({
-        data: {
-          name: 'OWNER',
-          workspaceId: workspaceRecord.id,
-          isSystem: true,
-        },
-      });
-
       await tx.workspaceMembers.create({
         data: {
           userId: ownerId,
           workspaceId: workspaceRecord.id,
-          roleId: ownerRole.id,
+          role: 'OWNER',
         },
       });
 
