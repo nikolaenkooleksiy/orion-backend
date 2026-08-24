@@ -35,6 +35,10 @@ export class ProjectService {
 
   async delete(projectId: string, userId: string) {
     await this.projectRepository.delete(projectId, userId);
+
+    return {
+      isSuccessful: true,
+    };
   }
 
   async addToFavorites(projectId: string, userId: string) {

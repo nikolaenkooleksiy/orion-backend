@@ -1,5 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { SuccessResponseDto } from 'src/common/dto/success-response.dto';
 import type { JwtPayload } from 'src/common/types';
 import { ProjectService } from '../app/project.service';
 import { CreateProjectDto } from '../dto/create-project.dto';
@@ -20,5 +21,13 @@ export class ProjectResolver {
   @Mutation(() => ProjectResponseDto, { name: 'create_project' })
   async createProject(@Args('body') body: CreateProjectDto) {
     return await this.projectService.create(body);
+  }
+
+  @Mutation(() => SuccessResponseDto, { name: 'delete_project' })
+  async deleteProject(
+    @Args('projectId') projectId: string,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    return this.projectService.delete(projectId, payload.sub);
   }
 }
