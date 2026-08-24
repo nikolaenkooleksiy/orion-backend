@@ -94,7 +94,7 @@ export class ProjectRepository implements IProjectRepository {
     });
   }
 
-  async addToFavorites(projectId: string, userId: string) {
+  async toggleFavorite(projectId: string, userId: string) {
     const existingFavorite = await this.db.userFavoriteProject.findUnique({
       where: {
         userId_projectId: {

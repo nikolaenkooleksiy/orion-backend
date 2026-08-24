@@ -8,5 +8,5 @@ export interface IProjectRepository {
   create: (project: Project) => Promise<Project>;
   update: (project: Project) => Promise<Project>;
   delete: (projectId: string, userId: string) => Promise<void>;
-  addToFavorites: (projectId: string, userId: string) => Promise<void>;
+  toggleFavorite: (projectId: string, userId: string) => Promise<void>;
 }

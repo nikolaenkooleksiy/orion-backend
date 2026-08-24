@@ -44,7 +44,7 @@ export class ProjectService {
     };
   }
 
-  async addToFavorites(projectId: string, userId: string) {
-    return await this.projectRepository.addToFavorites(projectId, userId);
+  async toggleFavorite(projectId: string, userId: string) {
+    return await this.projectRepository.toggleFavorite(projectId, userId);
   }
 }

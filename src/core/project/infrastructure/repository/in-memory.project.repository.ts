@@ -37,7 +37,7 @@ export class InMemoryProjectRepository implements IProjectRepository {
     return Promise.resolve();
   }
 
-  addToFavorites(projectId: string, userId: string): Promise<void> {
+  toggleFavorite(projectId: string, userId: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

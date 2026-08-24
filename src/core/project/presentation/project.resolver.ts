@@ -33,6 +33,15 @@ export class ProjectResolver {
     return await this.projectService.update(projectId, body);
   }
 
+  @Mutation(() => SuccessResponseDto, { name: 'toggle_favorite_project' })
+  async toggleFavorite(
+    @Args('projectId') projectId: string,
+    @CurrentUser() payload: JwtPayload,
+  ) {
+    await this.projectService.toggleFavorite(projectId, payload.sub);
+    return { isSuccessful: true };
+  }
+
   @Mutation(() => SuccessResponseDto, { name: 'delete_project' })
   async deleteProject(
     @Args('projectId') projectId: string,
