@@ -69,19 +69,23 @@ export class ProjectRepository implements IProjectRepository {
     );
   }
 
-  async update(projectId: string, project: Partial<Project>) {
-    const data = ProjectMapper.toPersistence(project as Project);
-
-    const updated = await this.db.project.updateManyAndReturn({
+  async findById(projectId: string): Promise<Project> {
+    const project = await this.db.project.findFirstOrThrow({
       where: { id: projectId },
+    });
+
+    return ProjectMapper.toDomain(project);
+  }
+
+  async update(project: Project): Promise<Project> {
+    const data = ProjectMapper.toPersistence(project);
+
+    const updated = await this.db.project.update({
+      where: { id: project.id },
       data,
     });
 
-    if (updated.length === 0) {
-      return null;
-    }
-
-    return ProjectMapper.toDomain(updated[0]);
+    return ProjectMapper.toDomain(updated);
   }
 
   async delete(projectId: string) {

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { Project } from '../domain/model/project.model';
 import {
@@ -25,12 +25,15 @@ export class ProjectService {
     return await this.projectRepository.create(project);
   }
 
-  async update(projectId: string, project: UpdateProjectDto) {
-    const updated = await this.projectRepository.update(projectId, project);
+  async update(projectId: string, body: UpdateProjectDto) {
+    const project = await this.projectRepository.findById(projectId);
 
-    if (!updated) {
-      throw new NotFoundException('Project not found');
-    }
+    if (body.name !== undefined) project.rename(body.name);
+    if (body.description !== undefined)
+      project.changeDescription(body.description);
+    if (body.color !== undefined) project.changeColor(body.color);
+
+    return this.projectRepository.update(project);
   }
 
   async delete(projectId: string, userId: string) {

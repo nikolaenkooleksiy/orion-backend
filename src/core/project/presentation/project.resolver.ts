@@ -5,6 +5,7 @@ import type { JwtPayload } from 'src/common/types';
 import { ProjectService } from '../app/project.service';
 import { CreateProjectDto } from '../dto/create-project.dto';
 import { ProjectResponseDto } from '../dto/project-response.dto';
+import { UpdateProjectDto } from '../dto/update-project.dto';
 
 @Resolver(() => ProjectResponseDto)
 export class ProjectResolver {
@@ -21,6 +22,15 @@ export class ProjectResolver {
   @Mutation(() => ProjectResponseDto, { name: 'create_project' })
   async createProject(@Args('body') body: CreateProjectDto) {
     return await this.projectService.create(body);
+  }
+
+  @Mutation(() => ProjectResponseDto, { name: 'update_project' })
+  async updateProject(
+    @CurrentUser() payload: JwtPayload,
+    @Args('projectId') projectId: string,
+    @Args('body') body: UpdateProjectDto,
+  ) {
+    return await this.projectService.update(projectId, body);
   }
 
   @Mutation(() => SuccessResponseDto, { name: 'delete_project' })
