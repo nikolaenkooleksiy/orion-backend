@@ -38,5 +38,7 @@ model Task {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tasks")
 }
 

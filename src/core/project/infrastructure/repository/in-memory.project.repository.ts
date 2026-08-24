@@ -1,18 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { Project } from '../../domain/model/project.model';
-import {
-  IProjectRepository,
-  ProjectWithStats,
-} from '../../domain/types/project.repository.interface';
+import { IProjectRepository } from '../../domain/types/project.repository.interface';
 
 @Injectable()
 export class InMemoryProjectRepository implements IProjectRepository {
-  addToFavorites(projectId: string, userId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  getProjectsStats(teamId: string): Promise<ProjectWithStats[]> {
-    throw new Error('Method not implemented.');
-  }
   private readonly projects = new Map<string, Project>();
 
   findAll(workspaceId: string): Promise<Project[]> {
@@ -55,6 +47,7 @@ export class InMemoryProjectRepository implements IProjectRepository {
       workspaceId: existing.workspaceId,
       createdAt: existing.createdAt,
       updatedAt: new Date(),
+      isFavorite: project.isFavorite ?? existing.isFavorite,
     });
 
     this.projects.set(projectId, updated);
@@ -65,5 +58,9 @@ export class InMemoryProjectRepository implements IProjectRepository {
   delete(projectId: string): Promise<void> {
     this.projects.delete(projectId);
     return Promise.resolve();
+  }
+
+  addToFavorites(projectId: string, userId: string): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }

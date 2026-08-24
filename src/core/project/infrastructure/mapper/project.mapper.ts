@@ -1,19 +1,7 @@
 import { Project as PrismaProject } from '@prisma/client';
 import { Project } from '../../domain/model/project.model';
-import { ProjectResponseDto } from '../../dto/project-response.dto';
 
 export class ProjectMapper {
-  static toResponse(project: Project): ProjectResponseDto {
-    return {
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      color: project.color,
-      isFavorite: project.isFavorite,
-      createdAt: project.createdAt,
-    };
-  }
-
   static toDomain(
     project: PrismaProject,
     isFavorite: boolean = false,

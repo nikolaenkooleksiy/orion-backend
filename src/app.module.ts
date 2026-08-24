@@ -10,6 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import type { Request, Response } from 'express';
+import { ProjectModule } from './core/project/project.module';
 import { WorkspaceModule } from './core/workspace/workspace.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { WorkspaceModule } from './core/workspace/workspace.module';
     UserModule,
     AuthModule,
     WorkspaceModule,
+    ProjectModule,
   ],
   providers: [
     {

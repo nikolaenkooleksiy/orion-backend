@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
 import { Project } from '../../domain/model/project.model';
 import { IProjectRepository } from '../../domain/types/project.repository.interface';
@@ -8,12 +9,15 @@ import { ProjectMapper } from '../mapper/project.mapper';
 export class ProjectRepository implements IProjectRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async findAll(workspaceId: string, userId: string): Promise<Project[]> {
+  async findAll(workspaceId: string, memberId: string): Promise<Project[]> {
     const userProjects = await this.db.project.findMany({
-      where: { workspaceId },
+      where: {
+        workspaceId,
+        workspace: { members: { some: { userId: memberId } } },
+      },
       include: {
         favoriteUsers: {
-          where: { userId },
+          where: { userId: memberId },
           select: { id: true },
         },
       },
@@ -28,9 +32,41 @@ export class ProjectRepository implements IProjectRepository {
   async create(project: Project) {
     const data = ProjectMapper.toPersistence(project);
 
-    const created = await this.db.project.create({ data });
+    await this.db.$transaction(async (tx) => {
+      return await tx.project.create({
+        data: {
+          ...data,
+          workspaceId: project.workspaceId,
+          boards: {
+            create: {
+              name: 'Default Board',
+              lists: {
+                createMany: {
+                  data: [
+                    { id: randomUUID(), name: 'To Do' },
+                    { id: randomUUID(), name: 'In Progress' },
+                    { id: randomUUID(), name: 'Done' },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      });
+    });
 
-    return ProjectMapper.toDomain(created);
+    return ProjectMapper.toDomain(
+      {
+        name: project.name,
+        description: project.description,
+        workspaceId: project.workspaceId,
+        color: project.color,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: project.id,
+      },
+      false,
+    );
   }
 
   async update(projectId: string, project: Partial<Project>) {

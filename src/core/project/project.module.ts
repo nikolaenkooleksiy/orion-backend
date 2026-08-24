@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
-import { ListService } from './app/list.service';
 import { ProjectService } from './app/project.service';
 import { BOARD_REPOSITORY } from './domain/types/board.repository.interface';
 import { LIST_REPOSITORY } from './domain/types/list.repository.interface';
@@ -8,12 +7,13 @@ import { PROJECT_REPOSITORY } from './domain/types/project.repository.interface'
 import { BoardRepository } from './infrastructure/repository/board.repository';
 import { ListRepository } from './infrastructure/repository/list.repository';
 import { ProjectRepository } from './infrastructure/repository/project.repository';
+import { ProjectResolver } from './presentation/project.resolver';
 
 @Module({
   providers: [
     ProjectService,
     StorageService,
-    ListService,
+    ProjectResolver,
     {
       provide: PROJECT_REPOSITORY,
       useClass: ProjectRepository,
@@ -27,5 +27,6 @@ import { ProjectRepository } from './infrastructure/repository/project.repositor
       useClass: ListRepository,
     },
   ],
+  exports: [ProjectService],
 })
 export class ProjectModule {}

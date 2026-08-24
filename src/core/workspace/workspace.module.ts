@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
+import { ProjectModule } from '../project/project.module';
 import { WorkspaceMembersService } from './app/workspace-members.service';
 import { WorkspaceService } from './app/workspace.service';
 import { WORKSPACE_MEMBERS_REPOSITORY } from './domain/types/workspace-members.repository.interface';
@@ -24,5 +25,6 @@ import { WorkspaceResolver } from './presentation/workspace.resolver';
       useClass: WorkspaceMembersRepository,
     },
   ],
+  imports: [ProjectModule],
 })
 export class WorkspaceModule {}

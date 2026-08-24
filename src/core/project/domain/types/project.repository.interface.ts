@@ -1,14 +1,9 @@
-import { ProjectResponseDto } from '../../dto/project-response.dto';
 import { Project } from '../model/project.model';
 
 export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 
-export type ProjectWithStats = ProjectResponseDto & {
-  tasksTotal: number;
-  tasksDone: number;
-};
 export interface IProjectRepository {
-  findAll(teamId: string, userId: string): Promise<Project[]>;
+  findAll(workspaceId: string, memberId: string): Promise<Project[]>;
 
   create(project: Project): Promise<Project>;
 
