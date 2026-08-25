@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { PrismaService } from 'src/infrastructure/database/prisma.service';
+import { DEFAULT_BOARD_NAME } from '../../domain/constants/board.constants';
+import { DEFAULT_LISTS } from '../../domain/constants/list.constants';
 import { Project } from '../../domain/model/project.model';
 import { IProjectRepository } from '../../domain/types/project.repository.interface';
 import { ProjectMapper } from '../mapper/project.mapper';
@@ -32,21 +33,17 @@ export class ProjectRepository implements IProjectRepository {
   async create(project: Project) {
     const data = ProjectMapper.toPersistence(project);
 
-    await this.db.$transaction(async (tx) => {
+    const createdProject = await this.db.$transaction(async (tx) => {
       return await tx.project.create({
         data: {
           ...data,
           workspaceId: project.workspaceId,
           boards: {
             create: {
-              name: 'Default Board',
+              name: DEFAULT_BOARD_NAME,
               lists: {
                 createMany: {
-                  data: [
-                    { id: randomUUID(), name: 'To Do' },
-                    { id: randomUUID(), name: 'In Progress' },
-                    { id: randomUUID(), name: 'Done' },
-                  ],
+                  data: DEFAULT_LISTS,
                 },
               },
             },
@@ -55,18 +52,7 @@ export class ProjectRepository implements IProjectRepository {
       });
     });
 
-    return ProjectMapper.toDomain(
-      {
-        name: project.name,
-        description: project.description,
-        workspaceId: project.workspaceId,
-        color: project.color,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        id: project.id,
-      },
-      false,
-    );
+    return ProjectMapper.toDomain(createdProject, false);
   }
 
   async findById(projectId: string): Promise<Project> {
