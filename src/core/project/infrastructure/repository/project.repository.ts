@@ -10,7 +10,7 @@ import { ProjectMapper } from '../mapper/project.mapper';
 export class ProjectRepository implements IProjectRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async findAll(workspaceId: string, memberId: string): Promise<Project[]> {
+  async findAll(workspaceId: string, memberId: string) {
     const userProjects = await this.db.project.findMany({
       where: {
         workspaceId,
@@ -55,15 +55,19 @@ export class ProjectRepository implements IProjectRepository {
     return ProjectMapper.toDomain(createdProject, false);
   }
 
-  async findById(projectId: string): Promise<Project> {
+  async findById(workspaceId: string, projectId: string, memberId: string) {
     const project = await this.db.project.findFirstOrThrow({
-      where: { id: projectId },
+      where: {
+        id: projectId,
+        workspaceId: workspaceId,
+        workspace: { members: { some: { userId: memberId } } },
+      },
     });
 
     return ProjectMapper.toDomain(project);
   }
 
-  async update(project: Project): Promise<Project> {
+  async update(project: Project) {
     const data = ProjectMapper.toPersistence(project);
 
     const updated = await this.db.project.update({

@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { BoardResponseDto } from './board-response.dto';
 
 @ObjectType('Project')
 export class ProjectResponseDto {
@@ -19,4 +20,7 @@ export class ProjectResponseDto {
 
   @Field(() => Date)
   createdAt: Date;
+
+  @Field(() => [BoardResponseDto], { nullable: true })
+  boards?: BoardResponseDto[];
 }

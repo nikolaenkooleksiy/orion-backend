@@ -4,7 +4,11 @@ export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 
 export interface IProjectRepository {
   findAll: (workspaceId: string, memberId: string) => Promise<Project[]>;
-  findById: (projectId: string) => Promise<Project>;
+  findById: (
+    workspaceId: string,
+    projectId: string,
+    memberId: string,
+  ) => Promise<Project>;
   create: (project: Project) => Promise<Project>;
   update: (project: Project) => Promise<Project>;
   delete: (projectId: string, userId: string) => Promise<void>;

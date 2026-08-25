@@ -8,7 +8,7 @@ import { BoardMapper } from '../mapper/board.mapper';
 export class BoardRepository implements IBoardRepository {
   constructor(private readonly db: PrismaService) {}
 
-  async findByProjectId(projectId: string): Promise<BoardModel[]> {
+  async findAllProjectBoards(projectId: string) {
     const boards = await this.db.board.findMany({
       where: { projectId },
     });
@@ -16,20 +16,17 @@ export class BoardRepository implements IBoardRepository {
     return boards.map((board) => BoardMapper.toDomain(board));
   }
 
-  async create(board: BoardModel): Promise<BoardModel> {
+  async create(board: BoardModel) {
     const data = BoardMapper.toPersistence(board);
 
     const newBoard = await this.db.board.create({
-      data: {
-        ...data,
-        projectId: board.projectId,
-      },
+      data,
     });
 
     return BoardMapper.toDomain(newBoard);
   }
 
-  async delete(boardId: string): Promise<void> {
+  async delete(boardId: string) {
     await this.db.board.delete({
       where: { id: boardId },
     });

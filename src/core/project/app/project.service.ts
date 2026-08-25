@@ -16,7 +16,19 @@ export class ProjectService {
   ) {}
 
   async findAll(workpaceId: string, memberId: string) {
-    return await this.projectRepository.findAll(workpaceId, memberId);
+    return await this.projectRepository.findAll(
+      workpaceId,
+
+      memberId,
+    );
+  }
+
+  async findById(workspaceId: string, projectId: string, memberId: string) {
+    return await this.projectRepository.findById(
+      workspaceId,
+      projectId,
+      memberId,
+    );
   }
 
   async create(body: CreateProjectDto) {
@@ -25,8 +37,17 @@ export class ProjectService {
     return await this.projectRepository.create(project);
   }
 
-  async update(projectId: string, body: UpdateProjectDto) {
-    const project = await this.projectRepository.findById(projectId);
+  async update(
+    workspaceId: string,
+    projectId: string,
+    memberId: string,
+    body: UpdateProjectDto,
+  ) {
+    const project = await this.projectRepository.findById(
+      workspaceId,
+      projectId,
+      memberId,
+    );
 
     if (body.name !== undefined) project.rename(body.name);
     if (body.description !== undefined)
