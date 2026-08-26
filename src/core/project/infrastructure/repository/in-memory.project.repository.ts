@@ -6,16 +6,21 @@ import { IProjectRepository } from '../../domain/types/project.repository.interf
 @Injectable()
 export class InMemoryProjectRepository implements IProjectRepository {
   private readonly projects = new Map<string, Project>();
+  private readonly favorites = new Map<string, Set<string>>();
 
   findAll(workspaceId: string, _memberId: string): Promise<Project[]> {
-    const projects = Array.from(this.projects.values()).filter(
-      (project) => project.workspaceId === workspaceId,
+    return Promise.resolve(
+      Array.from(this.projects.values()).filter(
+        (project) => project.workspaceId === workspaceId,
+      ),
     );
-
-    return Promise.resolve(projects);
   }
 
-  findById(projectId: string): Promise<Project> {
+  findById(
+    _workspaceId: string,
+    projectId: string,
+    _memberId: string,
+  ): Promise<Project> {
     const project = this.projects.get(projectId);
     if (!project) return Promise.reject(new Error('Project not found'));
     return Promise.resolve(project);
@@ -23,7 +28,6 @@ export class InMemoryProjectRepository implements IProjectRepository {
 
   create(project: Project): Promise<Project> {
     this.projects.set(project.id, project);
-
     return Promise.resolve(project);
   }
 
@@ -32,12 +36,16 @@ export class InMemoryProjectRepository implements IProjectRepository {
     return Promise.resolve(project);
   }
 
-  delete(projectId: string): Promise<void> {
+  delete(projectId: string, _userId: string): Promise<void> {
     this.projects.delete(projectId);
     return Promise.resolve();
   }
 
   toggleFavorite(projectId: string, userId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+    const key = `${userId}:${projectId}`;
+    if (!this.favorites.has(key)) {
+      this.favorites.set(key, new Set());
+    }
+    return Promise.resolve();
   }
 }

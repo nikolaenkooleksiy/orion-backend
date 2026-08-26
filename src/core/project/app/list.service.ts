@@ -13,20 +13,27 @@ export class ListService {
     @Inject(LIST_REPOSITORY) private listRepository: IListRepository,
   ) {}
 
-  async findByListId(boardId: string) {
-    return await this.listRepository.findByBoardId(boardId);
+  findByBoardId(boardId: string): Promise<ListModel[]> {
+    return this.listRepository.findAll(boardId);
   }
 
-  async createList(boardId: string, body: CreateListDto) {
-    const list = ListModel.create({ name: body.name, boardId });
-    await this.listRepository.create(list);
+  findById(listId: string): Promise<ListModel> {
+    return this.listRepository.findById(listId);
   }
 
-  async updateList(listId: string, body: UpdateListDto) {
-    await this.listRepository.update(listId, { name: body.name });
+  create(body: CreateListDto): Promise<ListModel> {
+    const list = ListModel.create({ name: body.name, boardId: body.boardId });
+    return this.listRepository.create(list).then(() => list);
   }
 
-  async deleteList(listId: string) {
-    await this.listRepository.delete(listId);
+  update(listId: string, body: UpdateListDto): Promise<ListModel> {
+    return this.listRepository.findById(listId).then((list) => {
+      if (body.name !== undefined) list.rename(body.name);
+      return this.listRepository.update(list).then(() => list);
+    });
+  }
+
+  delete(listId: string): Promise<void> {
+    return this.listRepository.delete(listId);
   }
 }

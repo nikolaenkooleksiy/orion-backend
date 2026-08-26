@@ -32,6 +32,11 @@ export class ListModel {
     return new ListModel(props);
   }
 
+  rename(name: string): void {
+    this.props.name = name;
+    this.props.updatedAt = new Date();
+  }
+
   get id(): string {
     return this.props.id;
   }
