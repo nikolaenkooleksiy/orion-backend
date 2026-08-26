@@ -16,7 +16,7 @@ export interface CreateBoardProps {
 export class BoardModel {
   private constructor(private props: BoardProps) {}
 
-  static create(props: CreateBoardProps): BoardModel {
+  static create(props: CreateBoardProps) {
     const now = new Date();
 
     return new BoardModel({
@@ -28,11 +28,11 @@ export class BoardModel {
     });
   }
 
-  static restore(props: BoardProps): BoardModel {
+  static restore(props: BoardProps) {
     return new BoardModel(props);
   }
 
-  rename(name: string): void {
+  rename(name: string) {
     this.props.name = name;
     this.props.updatedAt = new Date();
   }

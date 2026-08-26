@@ -6,7 +6,7 @@ import { IListRepository } from '../../domain/types/list.repository.interface';
 export class InMemoryListRepository implements IListRepository {
   private readonly lists = new Map<string, ListModel>();
 
-  findAll(boardId: string): Promise<ListModel[]> {
+  findAll(boardId: string) {
     return Promise.resolve(
       Array.from(this.lists.values()).filter(
         (list) => list.boardId === boardId,
@@ -14,23 +14,23 @@ export class InMemoryListRepository implements IListRepository {
     );
   }
 
-  findById(listId: string): Promise<ListModel> {
+  findById(listId: string) {
     const list = this.lists.get(listId);
     if (!list) return Promise.reject(new Error('List not found'));
     return Promise.resolve(list);
   }
 
-  create(list: ListModel): Promise<void> {
+  create(list: ListModel) {
     this.lists.set(list.id, list);
     return Promise.resolve();
   }
 
-  update(list: ListModel): Promise<void> {
+  update(list: ListModel) {
     this.lists.set(list.id, list);
     return Promise.resolve();
   }
 
-  delete(listId: string): Promise<void> {
+  delete(listId: string) {
     this.lists.delete(listId);
     return Promise.resolve();
   }

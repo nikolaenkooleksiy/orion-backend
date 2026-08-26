@@ -16,7 +16,7 @@ export interface CreateListProps {
 export class ListModel {
   private constructor(private props: ListProps) {}
 
-  static create(props: CreateListProps): ListModel {
+  static create(props: CreateListProps) {
     const now = new Date();
 
     return new ListModel({
@@ -28,11 +28,11 @@ export class ListModel {
     });
   }
 
-  static restore(props: ListProps): ListModel {
+  static restore(props: ListProps) {
     return new ListModel(props);
   }
 
-  rename(name: string): void {
+  rename(name: string) {
     this.props.name = name;
     this.props.updatedAt = new Date();
   }

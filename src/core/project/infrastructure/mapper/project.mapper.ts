@@ -2,10 +2,7 @@ import { Project as PrismaProject } from '@prisma/client';
 import { Project } from '../../domain/model/project.model';
 
 export class ProjectMapper {
-  static toDomain(
-    project: PrismaProject,
-    isFavorite: boolean = false,
-  ): Project {
+  static toDomain(project: PrismaProject, isFavorite = false) {
     return Project.restore({
       id: project.id,
       name: project.name,

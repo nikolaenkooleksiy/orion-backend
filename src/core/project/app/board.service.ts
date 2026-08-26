@@ -13,11 +13,11 @@ export class BoardService {
     private readonly boardRepository: IBoardRepository,
   ) {}
 
-  async findByProjectId(projectId: string): Promise<BoardModel[]> {
+  async findByProjectId(projectId: string) {
     return this.boardRepository.findAllProjectBoards(projectId);
   }
 
-  async create(body: CreateBoardDto): Promise<BoardModel> {
+  async create(body: CreateBoardDto) {
     const board = BoardModel.create({
       name: body.name,
       projectId: body.projectId,
@@ -26,7 +26,7 @@ export class BoardService {
     return this.boardRepository.create(board);
   }
 
-  async delete(boardId: string): Promise<void> {
+  async delete(boardId: string) {
     await this.boardRepository.delete(boardId);
   }
 }

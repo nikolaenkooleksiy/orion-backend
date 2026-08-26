@@ -2,7 +2,7 @@ import { List as PrismaList } from '@prisma/client';
 import { ListModel } from '../../domain/model/list.model';
 
 export class ListMapper {
-  static toDomain(list: PrismaList): ListModel {
+  static toDomain(list: PrismaList) {
     return ListModel.restore({
       id: list.id,
       name: list.name,
@@ -12,7 +12,7 @@ export class ListMapper {
     });
   }
 
-  static toPersistence(listModel: ListModel): PrismaList {
+  static toPersistence(listModel: ListModel) {
     return {
       id: listModel.id,
       name: listModel.name,

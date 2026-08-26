@@ -6,7 +6,7 @@ import { IBoardRepository } from '../../domain/types/board.repository.interface'
 export class InMemoryBoardRepository implements IBoardRepository {
   private readonly boards = new Map<string, BoardModel>();
 
-  findAllProjectBoards(projectId: string): Promise<BoardModel[]> {
+  findAllProjectBoards(projectId: string) {
     return Promise.resolve(
       Array.from(this.boards.values()).filter(
         (board) => board.projectId === projectId,
@@ -14,12 +14,12 @@ export class InMemoryBoardRepository implements IBoardRepository {
     );
   }
 
-  create(board: BoardModel): Promise<BoardModel> {
+  create(board: BoardModel) {
     this.boards.set(board.id, board);
     return Promise.resolve(board);
   }
 
-  delete(boardId: string): Promise<void> {
+  delete(boardId: string) {
     this.boards.delete(boardId);
     return Promise.resolve();
   }

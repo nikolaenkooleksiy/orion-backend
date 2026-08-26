@@ -20,7 +20,7 @@ export interface CreateProjectProps {
 export class Project {
   private constructor(private props: ProjectProps) {}
 
-  static create(props: CreateProjectProps): Project {
+  static create(props: CreateProjectProps) {
     const now = new Date();
 
     return new Project({
@@ -35,7 +35,7 @@ export class Project {
     });
   }
 
-  static restore(props: ProjectProps): Project {
+  static restore(props: ProjectProps) {
     return new Project({
       ...props,
     });
@@ -73,11 +73,11 @@ export class Project {
     return this.props.isFavorite ?? false;
   }
 
-  setFavorite(isFavorite: boolean): void {
+  setFavorite(isFavorite: boolean) {
     this.props.isFavorite = isFavorite;
   }
 
-  rename(name: string): void {
+  rename(name: string) {
     if (!name.trim()) {
       throw new Error('Project name cannot be empty');
     }
@@ -86,12 +86,12 @@ export class Project {
     this.props.updatedAt = new Date();
   }
 
-  changeDescription(description: string | null): void {
+  changeDescription(description: string | null) {
     this.props.description = description;
     this.props.updatedAt = new Date();
   }
 
-  changeColor(color: string): void {
+  changeColor(color: string) {
     this.props.color = color;
     this.props.updatedAt = new Date();
   }

@@ -8,31 +8,31 @@ import { ListMapper } from '../mapper/list.mapper';
 export class ListRepository implements IListRepository {
   constructor(private readonly db: PrismaService) {}
 
-  findAll(boardId: string): Promise<ListModel[]> {
+  findAll(boardId: string) {
     return this.db.list
       .findMany({ where: { boardId } })
       .then((lists) => lists.map((list) => ListMapper.toDomain(list)));
   }
 
-  findById(listId: string): Promise<ListModel> {
+  findById(listId: string) {
     return this.db.list
       .findUniqueOrThrow({ where: { id: listId } })
       .then((list) => ListMapper.toDomain(list));
   }
 
-  create(list: ListModel): Promise<void> {
+  create(list: ListModel) {
     const data = ListMapper.toPersistence(list);
     return this.db.list.create({ data }).then(() => undefined);
   }
 
-  update(list: ListModel): Promise<void> {
+  update(list: ListModel) {
     const data = ListMapper.toPersistence(list);
     return this.db.list
       .update({ where: { id: list.id }, data })
       .then(() => undefined);
   }
 
-  delete(listId: string): Promise<void> {
+  delete(listId: string) {
     return this.db.list.delete({ where: { id: listId } }).then(() => undefined);
   }
 }
