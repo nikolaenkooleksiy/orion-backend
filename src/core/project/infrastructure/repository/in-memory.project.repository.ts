@@ -1,69 +1,47 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { Project } from '../../domain/model/project.model';
-import {
-  IProjectRepository,
-  ProjectWithStats,
-} from '../../domain/types/project.repository.interface';
+import { IProjectRepository } from '../../domain/types/project.repository.interface';
 
 @Injectable()
 export class InMemoryProjectRepository implements IProjectRepository {
-  addToFavorites(projectId: string, userId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  getProjectsStats(teamId: string): Promise<ProjectWithStats[]> {
-    throw new Error('Method not implemented.');
-  }
   private readonly projects = new Map<string, Project>();
+  private readonly favorites = new Map<string, Set<string>>();
 
-  findAll(workspaceId: string): Promise<Project[]> {
-    const projects = Array.from(this.projects.values()).filter(
-      (project) => project.workspaceId === workspaceId,
+  findAll(workspaceId: string, _memberId: string) {
+    return Promise.resolve(
+      Array.from(this.projects.values()).filter(
+        (project) => project.workspaceId === workspaceId,
+      ),
     );
-
-    return Promise.resolve(projects);
   }
 
-  findById(projectId: string): Promise<Project> {
+  findById(_workspaceId: string, projectId: string, _memberId: string) {
     const project = this.projects.get(projectId);
     if (!project) return Promise.reject(new Error('Project not found'));
     return Promise.resolve(project);
   }
 
-  create(project: Project): Promise<Project> {
+  create(project: Project) {
     this.projects.set(project.id, project);
-
     return Promise.resolve(project);
   }
 
-  update(
-    projectId: string,
-    project: Partial<Project>,
-  ): Promise<Project | null> {
-    const existing = this.projects.get(projectId);
-    if (!existing) {
-      return Promise.resolve(null);
-    }
-
-    const updated = Project.restore({
-      id: existing.id,
-      name: project.name ?? existing.name,
-      description:
-        project.description !== undefined
-          ? project.description
-          : existing.description,
-      color: project.color ?? existing.color,
-      workspaceId: existing.workspaceId,
-      createdAt: existing.createdAt,
-      updatedAt: new Date(),
-    });
-
-    this.projects.set(projectId, updated);
-
-    return Promise.resolve(updated);
+  update(project: Project) {
+    this.projects.set(project.id, project);
+    return Promise.resolve(project);
   }
 
-  delete(projectId: string): Promise<void> {
+  delete(projectId: string, _userId: string) {
     this.projects.delete(projectId);
+    return Promise.resolve();
+  }
+
+  toggleFavorite(projectId: string, userId: string) {
+    const key = `${userId}:${projectId}`;
+    if (!this.favorites.has(key)) {
+      this.favorites.set(key, new Set());
+    }
     return Promise.resolve();
   }
 }

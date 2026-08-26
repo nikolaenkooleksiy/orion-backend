@@ -1,34 +1,41 @@
-import { Prisma, User as PrismaUser } from '@prisma/client';
-import { User } from '../../domain/model/user.model';
-import { UserResponseDto } from '../../dto/user-response.dto';
+import {
+  Prisma,
+  AuthProvider as PrismaAuthProvider,
+  User as PrismaUser,
+} from '@prisma/client';
+import {
+  AuthProvider as DomainAuthProvider,
+  User,
+} from '../../domain/model/user.model';
 
 export class UserMapper {
-  static toResponse(user: User): UserResponseDto {
-    return {
-      id: user.id,
-      username: user.username,
-      avatarUrl: user.avatarUrl,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
+  static toModel(raw: PrismaUser): User {
+    return User.restore({
+      id: raw.id,
+      name: raw.name,
+      email: raw.email,
+      avatarUrl: raw.avatarUrl,
+      provider: DomainAuthProvider[raw.provider],
+      providerId: raw.providerId,
+      password: raw.password,
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+    });
   }
 
-  static toModel(user: PrismaUser): User {
-    return new User(user);
-  }
+  static toPersistence(user: User): Prisma.UserUncheckedCreateInput {
+    const props = user.toProps();
 
-  static toPersistence(user: User): Prisma.UserCreateInput {
     return {
-      id: user.id,
-      username: user.username,
-      avatarUrl: user.avatarUrl,
-      email: user.email,
-      role: user.role,
-      provider: user.provider,
-      providerId: user.providerId,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      id: props.id,
+      name: props.name,
+      email: props.email,
+      avatarUrl: props.avatarUrl,
+      provider: PrismaAuthProvider[props.provider],
+      providerId: props.providerId,
+      password: props.password,
+      createdAt: props.createdAt,
+      updatedAt: props.updatedAt,
     };
   }
 }

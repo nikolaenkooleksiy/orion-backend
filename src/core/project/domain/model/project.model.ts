@@ -6,7 +6,7 @@ export interface ProjectProps {
   description: string | null;
   workspaceId: string;
   color: string;
-  isFavorite?: boolean;
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,32 +14,30 @@ export interface ProjectProps {
 export interface CreateProjectProps {
   name: string;
   description?: string | null;
-  color: string;
   workspaceId: string;
 }
 
 export class Project {
   private constructor(private props: ProjectProps) {}
 
-  static create(props: CreateProjectProps): Project {
+  static create(props: CreateProjectProps) {
     const now = new Date();
 
     return new Project({
       id: randomUUID(),
       name: props.name,
       description: props.description ?? null,
+      color: 'bg-blue-500',
       workspaceId: props.workspaceId,
-      color: props.color,
       isFavorite: false,
       createdAt: now,
       updatedAt: now,
     });
   }
 
-  static restore(props: ProjectProps): Project {
+  static restore(props: ProjectProps) {
     return new Project({
       ...props,
-      isFavorite: props.isFavorite ?? false,
     });
   }
 
@@ -55,10 +53,6 @@ export class Project {
     return this.props.description;
   }
 
-  get workspaceId(): string {
-    return this.props.workspaceId;
-  }
-
   get createdAt(): Date {
     return this.props.createdAt;
   }
@@ -71,15 +65,19 @@ export class Project {
     return this.props.color;
   }
 
+  get workspaceId(): string {
+    return this.props.workspaceId;
+  }
+
   get isFavorite(): boolean {
     return this.props.isFavorite ?? false;
   }
 
-  setFavorite(isFavorite: boolean): void {
+  setFavorite(isFavorite: boolean) {
     this.props.isFavorite = isFavorite;
   }
 
-  rename(name: string): void {
+  rename(name: string) {
     if (!name.trim()) {
       throw new Error('Project name cannot be empty');
     }
@@ -88,12 +86,12 @@ export class Project {
     this.props.updatedAt = new Date();
   }
 
-  changeDescription(description: string | null): void {
+  changeDescription(description: string | null) {
     this.props.description = description;
     this.props.updatedAt = new Date();
   }
 
-  changeColor(color: string): void {
+  changeColor(color: string) {
     this.props.color = color;
     this.props.updatedAt = new Date();
   }

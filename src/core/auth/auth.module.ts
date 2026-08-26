@@ -2,14 +2,15 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/core/user/user.module';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './app/auth.service';
 import { GithubStrategy } from './infrastructure/strategy/github.strategy';
+import { GoogleStrategy } from './infrastructure/strategy/google.strategy';
 import { JwtStrategy } from './infrastructure/strategy/jwt.strategy';
+import { AuthController } from './presentation/auth.controller';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GithubStrategy],
+  providers: [AuthService, JwtStrategy, GithubStrategy, GoogleStrategy],
   imports: [
     UserModule,
     JwtModule.registerAsync({

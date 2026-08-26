@@ -1,20 +1,16 @@
-import { ProjectResponseDto } from '../../dto/project-response.dto';
 import { Project } from '../model/project.model';
 
 export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 
-export type ProjectWithStats = ProjectResponseDto & {
-  tasksTotal: number;
-  tasksDone: number;
-};
 export interface IProjectRepository {
-  findAll(teamId: string, userId: string): Promise<Project[]>;
-
-  create(project: Project): Promise<Project>;
-
-  update(projectId: string, project: Partial<Project>): Promise<Project | null>;
-
-  delete(projectId: string, userId: string): Promise<void>;
-
-  addToFavorites(projectId: string, userId: string): Promise<void>;
+  findAll: (workspaceId: string, memberId: string) => Promise<Project[]>;
+  findById: (
+    workspaceId: string,
+    projectId: string,
+    memberId: string,
+  ) => Promise<Project>;
+  create: (project: Project) => Promise<Project>;
+  update: (project: Project) => Promise<Project>;
+  delete: (projectId: string, userId: string) => Promise<void>;
+  toggleFavorite: (projectId: string, userId: string) => Promise<void>;
 }
