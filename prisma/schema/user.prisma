@@ -5,21 +5,21 @@ enum AuthProvider {
 }
 
 model User {
-  id        String   @id
+  id String @id
 
-  name  String   @unique
-  email     String   @unique
+  name  String @unique
+  email String @unique
 
   avatarUrl String?
-  password   String?
+  password  String?
 
   provider   AuthProvider @default(CREDENTIALS)
   providerId String?
 
   workspaceMembers WorkspaceMembers[]
   favoriteProjects UserFavoriteProject[]
-  createdTasks  Task[] @relation("CreatedTasks")
-  assignedTasks Task[] @relation("AssignedTasks")
+  createdTasks     Task[]                @relation("CreatedTasks")
+  assignedTasks    Task[]                @relation("AssignedTasks")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

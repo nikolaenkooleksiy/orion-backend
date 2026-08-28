@@ -1,26 +1,27 @@
-enum TaskPriority {
-  LOW    @map("3")
-  MEDIUM @map("2")
-  HIGH   @map("1")
-}
-
-enum TaskApprovalStatus {
+enum ApprovalStatus {
   PENDING  @map("pending")
   APPROVED @map("approved")
   REJECTED @map("rejected")
 }
 
-
 model Task {
-  id          String  @id @default(uuid())
+  id String @id
+
   title       String
   description String?
 
   position Float @default(0)
 
-  priority TaskPriority @default(LOW)
+  priority       Int            @default(0)
+  approvalStatus ApprovalStatus @default(PENDING) @map("approval_status")
 
-  approvalStatus TaskApprovalStatus @default(PENDING) @map("approval_status")
+  dueDate DateTime? @map("due_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId      String
 
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String @map("list_id")
@@ -34,11 +35,17 @@ model Task {
   assignee   User?   @relation("AssignedTasks", fields: [assigneeId], references: [id], onDelete: Cascade)
   assigneeId String? @map("assignee_id")
 
-  dueDate DateTime? @map("due_date")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
   @@map("tasks")
 }
 
+model Tag {
+  id String @id
+
+  name  String
+  color String
+  tasks     Task[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("tags")
+}

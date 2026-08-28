@@ -4,10 +4,10 @@ enum WorkspaceRole {
 }
 
 model Workspace {
-  id          String   @id
+  id          String  @id
   name        String
   description String?
-  customUrl   String?  @unique
+  customUrl   String? @unique
   imageKey    String
 
   members  WorkspaceMembers[]
@@ -19,9 +19,8 @@ model Workspace {
   @@map("workspaces")
 }
 
-
 model WorkspaceMembers {
-  id   String        @id @default(uuid())
+  id String @id @default(uuid())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
