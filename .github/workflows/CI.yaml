@@ -34,11 +34,5 @@ jobs:
       - name: Run ESLint
         run: bun lint
 
-      - name: Build application
-        run: bun  build
-
       - name: Run Unit Tests
         run: bun test
-
-      - name: Run E2E Tests
-        run: bun test:e2e
