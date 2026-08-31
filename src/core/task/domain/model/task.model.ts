@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto';
 import {
   CreateTaskProps,
-  TaskProps,
-  TaskPriority,
   TaskApprovalStatus,
+  TaskPriority,
+  TaskProps,
 } from '../types/task.types';
 
 export class Task {
@@ -23,6 +23,7 @@ export class Task {
       title: trimmedTitle,
       description: props.description?.trim() ?? null,
       position: 0,
+      boardId: props.boardId,
       priority: props.priority ?? TaskPriority.LOW,
       approvalStatus: TaskApprovalStatus.PENDING,
       listId: props.listId,

@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ListResponseDto } from './list-response.dto';
+import { TagResponseDto } from 'src/core/task/dto/tag-response.dto';
 
 @ObjectType('Board')
 export class BoardResponseDto {
@@ -11,6 +12,9 @@ export class BoardResponseDto {
 
   @Field(() => Date)
   createdAt: Date;
+
+  @Field(() => [TagResponseDto])
+  tags: TagResponseDto[];
 
   @Field(() => [ListResponseDto], { nullable: true })
   lists?: ListResponseDto[];

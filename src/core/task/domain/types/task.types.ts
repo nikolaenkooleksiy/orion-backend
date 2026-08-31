@@ -14,6 +14,7 @@ export interface CreateTaskProps {
   title: string;
   description?: string | null;
   listId: string;
+  boardId: string;
   creatorId: string;
   priority?: TaskPriority;
   assigneeId?: string | null;
@@ -26,6 +27,7 @@ export interface TaskProps {
   description: string | null;
   position: number;
   priority: TaskPriority;
+  boardId: string;
   approvalStatus: TaskApprovalStatus;
   listId: string;
   creatorId: string;
