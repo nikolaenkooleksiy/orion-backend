@@ -1,0 +1,9 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "Before performing any task, always load the relevant skill using the skill tool. Check available skills first, then load the most relevant one for the current task."
+  ],
+  "skills": {
+    "paths": [".agents/skills"]
+  }
+}

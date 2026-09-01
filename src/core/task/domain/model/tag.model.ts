@@ -45,4 +45,20 @@ export class TagModel {
   get updatedAt() {
     return this.props.updatedAt;
   }
+
+  public rename(name: string) {
+    const trimmed = name?.trim();
+    if (!trimmed) throw new Error('Tag name cannot be empty');
+    this.props.name = trimmed;
+    this.touch();
+  }
+
+  public changeColor(color: string) {
+    this.props.color = color;
+    this.touch();
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date();
+  }
 }

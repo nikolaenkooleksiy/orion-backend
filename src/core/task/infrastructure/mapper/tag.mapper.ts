@@ -3,7 +3,7 @@ import { TagModel } from '../../domain/model/tag.model';
 
 export class TagMapper {
   static toDomain(tag: Tag): TagModel {
-    return TagModel.create({ ...tag });
+    return TagModel.restore({ ...tag });
   }
 
   static toPersistence(tagModel: TagModel): Prisma.TagUncheckedCreateInput {
