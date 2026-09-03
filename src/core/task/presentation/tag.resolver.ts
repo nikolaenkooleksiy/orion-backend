@@ -3,15 +3,16 @@ import { SuccessResponseDto } from 'src/common/dto/success-response.dto';
 import { TagService } from '../app/tag.service';
 import { CreateTagDto } from '../dto/create-tag.dto';
 import { TagResponseDto } from '../dto/tag-response.dto';
+import { UpdateTagDto } from '../dto/update-tag.dto';
 
 @Resolver(() => TagResponseDto)
 export class TagResolver {
   constructor(private readonly tagService: TagService) {}
 
   @Query(() => [TagResponseDto], {
-    name: 'workspace_tags',
+    name: 'find_all_tags',
   })
-  async findAllByWorkspace(workspaceId: string) {
+  async findAllByWorkspace(@Args('workspaceId') workspaceId: string) {
     return this.tagService.findAllByWorkspace(workspaceId);
   }
 
@@ -20,6 +21,13 @@ export class TagResolver {
   })
   async create(@Args('body') body: CreateTagDto) {
     return this.tagService.create(body);
+  }
+
+  @Mutation(() => TagResponseDto, {
+    name: 'update_tag',
+  })
+  async update(@Args('tagId') tagId: string, @Args('body') body: UpdateTagDto) {
+    return this.tagService.update(tagId, body);
   }
 
   @Mutation(() => SuccessResponseDto, {
