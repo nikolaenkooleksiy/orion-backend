@@ -4,11 +4,11 @@ export interface CreateTaskProps {
   title: string;
   description?: string | null;
   listId: string;
-  boardId: string;
   creatorId: string;
   priority?: number;
   assigneeId?: string | null;
   dueDate?: Date | null;
+  tagIds?: string[];
 }
 
 export interface TaskProps {
@@ -17,12 +17,12 @@ export interface TaskProps {
   description: string | null;
   position: number;
   priority: number;
-  boardId: string;
   approvalStatus: ApprovalStatus;
   listId: string;
   creatorId: string;
   assigneeId: string | null;
   dueDate: Date | null;
+  tagIds: string[];
   createdAt: Date;
   updatedAt: Date;
 }

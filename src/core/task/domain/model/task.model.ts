@@ -19,13 +19,13 @@ export class Task {
       title: trimmedTitle,
       description: props.description?.trim() ?? null,
       position: 0,
-      boardId: props.boardId,
-      priority: props.priority ?? 3,
+      priority: props.priority ?? 0,
       approvalStatus: ApprovalStatus.PENDING,
       listId: props.listId,
       creatorId: props.creatorId,
       assigneeId: props.assigneeId ?? null,
       dueDate: props.dueDate ?? null,
+      tagIds: props.tagIds ?? [],
       createdAt: now,
       updatedAt: now,
     });
@@ -81,6 +81,18 @@ export class Task {
     this.touch();
   }
 
+  public addTag(tagId: string) {
+    if (!this.props.tagIds.includes(tagId)) {
+      this.props.tagIds.push(tagId);
+      this.touch();
+    }
+  }
+
+  public removeTag(tagId: string) {
+    this.props.tagIds = this.props.tagIds.filter((id) => id !== tagId);
+    this.touch();
+  }
+
   private touch() {
     this.props.updatedAt = new Date();
   }
@@ -117,10 +129,6 @@ export class Task {
     return this.props.listId;
   }
 
-  get boardId() {
-    return this.props.boardId;
-  }
-
   get creatorId() {
     return this.props.creatorId;
   }
@@ -131,6 +139,10 @@ export class Task {
 
   get dueDate() {
     return this.props.dueDate;
+  }
+
+  get tagIds() {
+    return this.props.tagIds;
   }
 
   get createdAt() {

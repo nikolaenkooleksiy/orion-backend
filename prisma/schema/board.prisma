@@ -3,7 +3,6 @@ model Board {
   name String
 
   lists List[]
-  tasks Task[]
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String  @map("project_id")

@@ -2,7 +2,9 @@ import { PrismaService } from 'src/infrastructure/database/prisma.service';
 import { Task } from '../../domain/model/task.model';
 import { ITaskRepository } from '../../domain/types/task.repository.interface';
 import { TaskMapper } from '../mapper/task.mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TaskRepository implements ITaskRepository {
   constructor(private readonly db: PrismaService) {}
 
@@ -10,6 +12,9 @@ export class TaskRepository implements ITaskRepository {
     const tasks = await this.db.task.findMany({
       where: {
         listId,
+      },
+      include: {
+        tags: true,
       },
     });
 
@@ -21,6 +26,9 @@ export class TaskRepository implements ITaskRepository {
       where: {
         id: taskId,
       },
+      include: {
+        tags: true,
+      },
     });
 
     return TaskMapper.toDomain(task);
@@ -31,6 +39,9 @@ export class TaskRepository implements ITaskRepository {
 
     const newTask = await this.db.task.create({
       data,
+      include: {
+        tags: true,
+      },
     });
 
     return TaskMapper.toDomain(newTask);
@@ -44,6 +55,9 @@ export class TaskRepository implements ITaskRepository {
         id: task.id,
       },
       data,
+      include: {
+        tags: true,
+      },
     });
 
     return TaskMapper.toDomain(updatedTask);

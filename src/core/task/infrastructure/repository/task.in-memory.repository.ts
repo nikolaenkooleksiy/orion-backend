@@ -28,11 +28,11 @@ export class InMemoryTaskRepository implements ITaskRepository {
     return Promise.resolve(task);
   }
 
-  async delete(taskId: string): Promise<void> {
+  async delete(taskId: string): Promise<boolean> {
     if (!this.tasks.has(taskId)) {
       return Promise.reject(new Error('Task not found'));
     }
     this.tasks.delete(taskId);
-    return Promise.resolve();
+    return Promise.resolve(true);
   }
 }

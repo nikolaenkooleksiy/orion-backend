@@ -1,5 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { TaskApprovalStatus, TaskPriority } from '../domain/types/task.types';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { ApprovalStatus } from '@prisma/client';
+
+registerEnumType(ApprovalStatus, { name: 'ApprovalStatus' });
 
 @ObjectType('Task')
 export class TaskResponseDto {
@@ -15,11 +17,11 @@ export class TaskResponseDto {
   @Field(() => Number)
   position: number;
 
-  @Field(() => TaskPriority)
-  priority: TaskPriority;
+  @Field(() => Number)
+  priority: number;
 
-  @Field(() => TaskApprovalStatus)
-  approvalStatus: TaskApprovalStatus;
+  @Field(() => ApprovalStatus)
+  approvalStatus: ApprovalStatus;
 
   @Field(() => String)
   listId: string;
@@ -32,6 +34,9 @@ export class TaskResponseDto {
 
   @Field(() => Date, { nullable: true })
   dueDate: Date | null;
+
+  @Field(() => [String])
+  tagIds: string[];
 
   @Field(() => Date)
   createdAt: Date;

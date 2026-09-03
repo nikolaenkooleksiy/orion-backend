@@ -1,5 +1,12 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 @InputType()
 export class CreateTaskDto {
@@ -19,7 +26,7 @@ export class CreateTaskDto {
   listId: string;
 
   @Field(() => Number, { nullable: true })
-  @Min(1)
+  @Min(0)
   @Max(3)
   @IsOptional()
   priority?: number;
@@ -32,4 +39,9 @@ export class CreateTaskDto {
   @Field(() => Date, { nullable: true })
   @IsOptional()
   dueDate?: Date | null;
+
+  @Field(() => [String], { nullable: true })
+  @IsArray()
+  @IsOptional()
+  tagIds?: string[];
 }

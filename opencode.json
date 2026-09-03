@@ -5,5 +5,13 @@
   ],
   "skills": {
     "paths": [".agents/skills"]
+  },
+  "mcp":{
+  "yaak":{
+    "type": "local",
+    "enabled": true,
+    "command":["npx","-y", "mcp-remote", "http://127.0.0.1:64343/mcp"]
+  }
+
   }
 }
