@@ -1,14 +1,4 @@
-export enum TaskPriority {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-}
-
-export enum TaskApprovalStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-}
+import { ApprovalStatus } from '@prisma/client';
 
 export interface CreateTaskProps {
   title: string;
@@ -16,7 +6,7 @@ export interface CreateTaskProps {
   listId: string;
   boardId: string;
   creatorId: string;
-  priority?: TaskPriority;
+  priority?: number;
   assigneeId?: string | null;
   dueDate?: Date | null;
 }
@@ -26,9 +16,9 @@ export interface TaskProps {
   title: string;
   description: string | null;
   position: number;
-  priority: TaskPriority;
+  priority: number;
   boardId: string;
-  approvalStatus: TaskApprovalStatus;
+  approvalStatus: ApprovalStatus;
   listId: string;
   creatorId: string;
   assigneeId: string | null;

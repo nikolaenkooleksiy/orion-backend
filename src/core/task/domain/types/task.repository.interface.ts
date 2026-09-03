@@ -7,5 +7,5 @@ export interface ITaskRepository {
   findById: (taskId: string) => Promise<Task>;
   create: (task: Task) => Promise<Task>;
   update: (task: Task) => Promise<Task>;
-  delete: (taskId: string) => Promise<void>;
+  delete: (taskId: string) => Promise<boolean>;
 }

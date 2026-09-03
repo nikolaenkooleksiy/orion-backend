@@ -1,10 +1,6 @@
+import { ApprovalStatus } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import {
-  CreateTaskProps,
-  TaskApprovalStatus,
-  TaskPriority,
-  TaskProps,
-} from '../types/task.types';
+import { CreateTaskProps, TaskProps } from '../types/task.types';
 
 export class Task {
   private constructor(private props: TaskProps) {}
@@ -24,8 +20,8 @@ export class Task {
       description: props.description?.trim() ?? null,
       position: 0,
       boardId: props.boardId,
-      priority: props.priority ?? TaskPriority.LOW,
-      approvalStatus: TaskApprovalStatus.PENDING,
+      priority: props.priority ?? 3,
+      approvalStatus: ApprovalStatus.PENDING,
       listId: props.listId,
       creatorId: props.creatorId,
       assigneeId: props.assigneeId ?? null,
@@ -55,12 +51,12 @@ export class Task {
     this.touch();
   }
 
-  public changePriority(priority: TaskPriority) {
+  public changePriority(priority: number) {
     this.props.priority = priority;
     this.touch();
   }
 
-  public changeApprovalStatus(status: TaskApprovalStatus) {
+  public changeApprovalStatus(status: ApprovalStatus) {
     this.props.approvalStatus = status;
     this.touch();
   }
@@ -119,6 +115,10 @@ export class Task {
 
   get listId() {
     return this.props.listId;
+  }
+
+  get boardId() {
+    return this.props.boardId;
   }
 
   get creatorId() {

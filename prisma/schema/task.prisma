@@ -19,8 +19,7 @@ model Task {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
 
-  tag   Tag    @relation(fields: [tagId], references: [id])
-  tagId String
+  tags Tag[]
 
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId String @map("list_id")
@@ -42,12 +41,15 @@ model Tag {
 
   name  String
   color String
-  tasks Task[]
 
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
+
+  task   Task   @relation(fields: [taskId], references: [id])
+  taskId String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("tags")
 }

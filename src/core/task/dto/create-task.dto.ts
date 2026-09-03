@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { TaskPriority } from '../domain/types/task.types';
+import { IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 
 @InputType()
 export class CreateTaskDto {
@@ -19,10 +18,11 @@ export class CreateTaskDto {
   @IsNotEmpty()
   listId: string;
 
-  @Field(() => TaskPriority, { nullable: true })
-  @IsEnum(TaskPriority)
+  @Field(() => Number, { nullable: true })
+  @Min(1)
+  @Max(3)
   @IsOptional()
-  priority?: TaskPriority;
+  priority?: number;
 
   @Field(() => String, { nullable: true })
   @IsString()
